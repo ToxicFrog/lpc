@@ -1,53 +1,48 @@
 local styles = {}
 
-function styles.b(buf)
-    return "[b]%s[/b]" % buf
+local function basic_style(tag)
+    local format = "["..tag.."]%s[/"..tag.."]"
+    styles[tag] = function(buf)
+        return format % buf
+    end
 end
 
+-- basic bbcode tags
+for _,tag in ipairs { "b", "s", "u", "super", "sub", "pre", "tt", "code" } do
+    basic_style(tag)
+end
+
+-- special handling for italics - if they're on, turns them off, and if off, on
 function styles.i(buf)
-    return "[i]%s[/i]" % buf
+    return "[i]%s[/i]" % buf:gsub("%.i(%b{})", ".ii%1")
 end
 
-function styles.s(buf)
-    return "[s]%s[/s]" % buf
+function styles.ii(buf)
+    return "[/i]%s[i]" % buf:gsub("%.ii(%b{})", ".i%1")
 end
 
 function styles.img(buf)
-    return '[img]http://%s/%s/%s.png[/img]' % lp.imghost % lp.imgpath % buf
+    return '[img]%s[/img]' % buf
 end
 
 function styles.url(buf)
     local href,text = buf:match("(%S+) (.*)")
     
-    return "[url=%s]%s[/url]" % href % text
-end
-
-function styles.super(buf)
-    return "[super]%s[/super]" % buf
+    return '[url=%s]%s[/url]' % href % text
 end
 
 local function tobbcode(style, buf)
     if styles[style] then
-        return styles[style](buf:sub(2,-2))
+        return styles[style](buf)
     else
-        return error("Invalid format/style key: "..style)
+        print("[bbcode] [warn] unknown format: .%s{%s}" % style % buf)
     end
 end
 
-return styles
-
-local function expand(str)
-    local str,n = str:gsub("%.(%w+)(%b{})", tobbcode)
-    if n > 0 then
-        return expand(str)
-    else
-        return str
-    end
+local function doit(chapter, options)
+    print("[bbcode] rendering chapter %d to %s" % chapter.index % options.o)
+    return output.expand(chapter.text, tobbcode)
 end
 
-function lp.write(fd, str)
-    fd:write( expand(str) )
-end
-
-lp.filename = "post.txt"
+return output.makefn(doit, "post.bbcode")
 

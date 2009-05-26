@@ -34,3 +34,11 @@ function output.makefn(f, filename)
     end
 end
 
+function output.expand(str, replacer)
+    local str,n = str:gsub("%.(%w+)(%b{})", function(tag,buf) return replacer(tag, buf:sub(2,-2)) end)
+    if n > 0 then
+        return output.expand(str, replacer)
+    end
+    return str
+end
+

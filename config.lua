@@ -73,6 +73,24 @@ lp.output = {
     "bbcode";
 }
 
+-- currently supported output modules are:
+--
+--      html
+--  creates HTML output. Valid options: o=<output file>
+--
+--      bbcode
+--  creates BBCode output suitable for posting on SA. Same options as HTML.
+--
+--      ir
+--  saves the intermediate representation of the update to a file. Mostly useful
+--  for debugging. Same options as HTML.
+--
+--      images
+--  processes all images in the given updates through the image mapper, given by
+--  the lp.images setting. This can be overriden with the mapper=foo setting.
+--  you must run this output format before generating HTML or bbcode unless you
+--  really know what you're doing!
+
 ---------------------
 -- UPLOAD SETTINGS --
 ---------------------

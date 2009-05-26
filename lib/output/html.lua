@@ -37,21 +37,15 @@ end
 
 local function tohtml(style, buf)
     if styles[style] then
-        return styles[style](buf:sub(2,-2))
+        return styles[style](buf)
     else
-        return error("Invalid format/style key: "..style)
+        print("[html] [warn] unknown format: .%s{%s}" % style % buf)
     end
 end
 
-local function expand(chapter)
-    require "util"; table.print(chapter)
-    local str,n = chapter.text:gsub("%.(%w+)(%b{})", tohtml)
-    if n > 0 then
-        return expand(str)
-    else
-        return (str:gsub("\n", "<br>\n"))
-    end
+local function doit(chapter, options)
+    print("[html] rendering chapter %d to %s" % chapter.index % options.o)
+    return output.expand(chapter.text, tohtml):gsub("\n", "<br>\n");
 end
 
-return output.makefn(expand, "post.html")
-    
+return output.makefn(doit, "post.html")
