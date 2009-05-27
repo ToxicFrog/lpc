@@ -2,18 +2,19 @@
 
 -- the title at the start of the post. Renders is as bold followed by two newlines.
 function formatting.title(title)
-    emit (".b{%d: %s}\n\n", lp.chapter.index, title)
+    emit (".b{%d: %s}", lp.chapter.index, title)
 end
 
 -- FAQ. Invoked as 'faq ("question", "answer")'
 -- Produces the question in bold, newline, then the answer and two newlines.
 function formatting.faq(Q, A)
-    emit (".b{%s}\n%s\n\n" % Q % A)
+
+    emit (".b{%s}\n%s" % Q % A)
 end
 
 -- general LP commentary. Text in italics.
 function formatting.text(text)
-    emit ("\n.i{%s}\n\n" % text)
+    emit (".i{%s}" % text)
 end
 
 -- a link to elsewhere

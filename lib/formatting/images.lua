@@ -13,10 +13,12 @@ end
 -- .img{003/ss/0002}
 -- you can pass multiple numbers and it will concat them, eg, ss(1,2,3)
 function formatting.ss(...)
-    for _,n in ipairs {...}
+    local argv = {...}
+    for i,n in ipairs (argv)
     do
-        emit (".img{%03d/ss/%04d%s}\n" % lp.chapter.index % n % lp.ssext)
+        argv[i] = (".img{%03d/ss/%04d%s}" % lp.chapter.index % n % lp.ssext)
     end
+    emit(table.concat(argv, "\n"))
 end
 
 

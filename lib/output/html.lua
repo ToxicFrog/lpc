@@ -45,7 +45,7 @@ end
 
 local function doit(chapter, options)
     print("[html] rendering chapter %d to %s" % chapter.index % options.o)
-    return output.expand(chapter.text, tohtml):gsub("\n", "<br>\n");
+    return (output.expand(chapter.text, tohtml):gsub("\n", "<br>\n"));
 end
 
 return output.makefn(doit, "post.html")

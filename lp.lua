@@ -58,7 +58,9 @@ local function load_chapter(chapter)
     lp.chapters[chapter] = lp.chapter
 
     setupenv(f)
+    formatting.lfsensitive(true)
     f()
+    formatting.lfsensitive(false)
     lp.chapter.text = table.concat(lp.chapter.text)
     
     return true
