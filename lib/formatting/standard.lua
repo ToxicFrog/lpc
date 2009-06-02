@@ -8,7 +8,7 @@ end
 -- FAQ. Invoked as 'faq ("question", "answer")'
 -- Produces the question in bold, newline, then the answer and two newlines.
 function formatting.faq(Q, A)
-
+    if not A then return function(A) return formatting.faq(Q,A) end end
     emit (".b{%s}\n%s", Q, A)
 end
 
