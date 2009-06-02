@@ -40,6 +40,7 @@ local function tohtml(style, buf)
         return styles[style](buf)
     else
         print("[html] [warn] unknown format: .%s{%s}" % style % buf)
+        return buf
     end
 end
 
