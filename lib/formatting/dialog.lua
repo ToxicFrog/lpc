@@ -8,7 +8,7 @@ lp.faceext = lp.faceext or lp.ssext
 -- this handles the actual formatting
 local function dialog(name, text)
     local face = ".img{%03d/faces/%s%s}" % lp.chapter.index % name % lp.faceext
-    emit ("%s %s" % face % text)
+    emit ("%s %s", face, text)
 end
 
 -- this will be called if a format is requested that doesn't have a function
