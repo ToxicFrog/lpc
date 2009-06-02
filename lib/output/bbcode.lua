@@ -8,7 +8,7 @@ local function basic_style(tag)
 end
 
 -- basic bbcode tags
-for _,tag in ipairs { "b", "s", "u", "super", "sub", "pre", "tt", "code" } do
+for _,tag in ipairs { "b", "s", "u", "super", "sub", "pre", "tt", "code", "spoiler" } do
     basic_style(tag)
 end
 
