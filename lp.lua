@@ -7,7 +7,7 @@
 --------------------
 
 -- package loader setup
-package.path = "./?.lua"..package.path
+package.path = "./?.lua;"..package.path
 
 -- general utility functions
 require "lib.misc"

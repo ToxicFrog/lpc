@@ -1,3 +1,6 @@
+package.path = "lib/luasocket/?.lua;"..package.path
+package.cpath = "lib/luasocket/?.dll;lib/luasocket/?.so;"..package.cpath
+
 local http = require "socket.http"
 local ltn12 = require "ltn12"
 
