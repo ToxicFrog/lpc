@@ -1,0 +1,13 @@
+\use{mugshots}{dir=faces/}{ext=.png}
+\use{emotes}
+
+\save{}
+    \use{lpix}{user=user}{pass=password}{notimg}{noerror}
+    \use{bbcode}
+    \out{.bbcode}
+\restore{}
+
+\save{}
+    \use{html}{emote_type=png}
+    \out{.html}
+\restore{}

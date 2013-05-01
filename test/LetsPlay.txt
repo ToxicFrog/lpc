@@ -1,0 +1,12 @@
+\include{config}
+
+\b{Let's Play Septerra Core}
+
+\url{www.google.ca}{\b{Google}}
+\url{forums.somethingawful.com}
+
+\i{test \i{more test} even more test}
+
+Maya: "Seriously, guys? This is the test file?"
+Grubb: "Yep. :v:"
+
