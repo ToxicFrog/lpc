@@ -25,7 +25,7 @@ function use(package, ...)
             options[opt] = true
         end
     end
-    
+
     table.insert(packages, { package, options })
     return ""
 end
@@ -36,7 +36,8 @@ end
 ALIAS("\\", rem)
 
 function include(file)
-    return assert(io.open(file, "r")):read("*a")
+    local dir = FILE:gsub('[^/]+$', '')
+    return assert(io.open('./'..dir..'/'..file, "r")):read("*a")
 end
 
 function def(name, body)
@@ -45,7 +46,7 @@ function def(name, body)
         return (body:gsub("\\(%d+)", function(i) return argv[tostring(i)] end))
     end
     ALIAS(name, f)
-    
+
     return ""
 end
 
