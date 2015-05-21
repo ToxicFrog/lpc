@@ -1,12 +1,13 @@
-\include{config}
+[include config]
+[b Let's Play Septerra Core]
+[url www.google.ca [b Google]]
+[url forums.somethingawful.com]
 
-\b{Let's Play Septerra Core}
+[def defms 1
+  [def \1 1 [mugshot \1 \\1]]]
+[defms Maya]
+[defms Grubb]
 
-\url{www.google.ca}{\b{Google}}
-\url{forums.somethingawful.com}
-
-\i{test \i{more test} even more test}
-
-Maya: "Seriously, guys? This is the test file?"
-Grubb: "Yep. :v:"
-
+[i test [i more [i nested] test] even more test]
+[Maya Seriously guys? This is the test file?]
+[Grubb Yep. [emote v]]

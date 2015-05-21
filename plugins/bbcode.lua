@@ -1,95 +1,80 @@
--- Generates BBcode output. Does not actually save to file; combine with
--- \out to save it somewhere.
+-- Generates bbcode output.
 
-function simple(tag)
-    local open,close = "["..tag.."]","[/"..tag.."]"
-    
-    _ENV[tag] = function(text) return open..text..close end
+local function tag(t)
+  local open,close = "[\\"..t.."]","[\\/"..t.."]"
+  defmacro(t, 1, function(text)
+    return open..text..close
+  end)
 end
 
---------------------------------------------------------------------------------
---      Basic Formatting
---------------------------------------------------------------------------------
+-- Tags that are just open-content-close with no subtleties.
+local simple_tags = {
+  "b", "u", "s", "super", "sub", "fixed", "spoiler",
+  "pre", "code", "img", "timg"
+}
 
--- bold
-simple "b"
-
--- underline
-simple "u"
-
--- strikethrough
-simple "s"
-
--- superscript
-simple "super"; ALIAS("^", super); ALIAS("sup", super)
-
--- subscript
-simple "sub"; ALIAS("_", sub)
-
--- fixed width
-simple "fixed"; ALIAS("tt", fixed)
-
--- hidden spoiler
-simple "spoiler"
-
--- preformatted block
-simple "pre"
-
--- code block
-simple "code"
-
--- quote block
-function quote(who, what)
-    if not what then
-        return "[quote]%s[/quote]" % who
-    else
-        return "[quote=%s]%s[/quote]" % { who, what }
-    end
+for _,t in ipairs(simple_tags) do
+  tag(t)
 end
+
+-- Convenient aliases for the above.
+defalias("sup", "super")
+
+defalias("^", "super")
+defalias("_", "sub")
+
+defalias("tt", "fixed")
+
+-- Quote block with optional name. [quote . text] omits the name.
+defmacro("quote", 2, function(name, text)
+  if name ~= "." then
+    return "[\\quote=%s]%s[\\/quote]" % { name, text }
+  else
+    return "[\\quote]%s[\\/quote]" % text
+  end
+end)
+
+-- Hyperlink. [url foo text] links text to foo, [url foo] is eqv to [url foo foo].
+defmacro("url", 2, function(url, text)
+  text = text or url
+  return "[\\url=%s]%s[\\/url]" % { url, text }
+end)
+
+-- Italics. This is hinky because we want nested italics to act as a toggle,
+-- so that things like [i the starship [i Von Braun]] come out properly.
+-- We handle this by registering two macros, i to turn italics on and !i to turn
+-- them off; then we replace all i with !i in the body before returning.
+defmacro("i", 1, function(text)
+  local function toggle(text)
+    return text:gsub('^%[i ', '[!i ')
+  end
+  return '[\\i]'..text:gsub('%b[]', toggle)..'[\\/i]'
+end)
+defmacro("!i", 1, function(text)
+  return '[\\/i]'..text..'[\\i]'
+end)
+
+-- Emotes.
+local emotes = {
+  smile   = ":)";
+  frown   = ":(";
+  biggrin = ":D";
+  wink    = ";)";
+}
+
+defmacro("emote", 1, function(name)
+  return emotes[name] or (":%s:" % name)
+end)
 
 -- italic
 -- we use MARK here so that \i{The good ship \i{Mary Celeste}} comes out
 -- properly, ie, nested italics toggle it on and off
 -- the POST rule will turn them into actual italic markers
 function i(text)
-    return MARK..text..MARK
-end
-
-function POST(text)
-    local italic = false
-    
-    text = text:gsub(MARK, function()
-        italic = not italic
-        return italic and "[i]" or "[/i]"
-    end)
-    
-    return text:trim()
+  return MARK..text..MARK
 end
 
 --------------------------------------------------------------------------------
 --      Emotes
 --------------------------------------------------------------------------------
 
-local emotes = {
-    smile = ":)";
-    frown = ":(";
-    biggrin = ":D";
-    wink = ";)";
-}
-
-function emote(name)
-    return emotes[name] or (":%s:" % name)
-end
-
---------------------------------------------------------------------------------
---      External References
---------------------------------------------------------------------------------
-
--- hyperlink
-function url(url, text)
-    return "[url=%s]%s[/url]" % { url, text or url }
-end
-
--- inline images
-simple "img"
-simple "timg"

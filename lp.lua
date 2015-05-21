@@ -1,95 +1,98 @@
 #!/usr/bin/env luajit
 
-package.path = package.path..";lib/?.lua;lib/luasocket/?.lua"
-package.cpath = package.cpath..";lib/?.so;lib/?.dll;lib/luasocket/?.so;lib/luasocket/?.dll"
+package.path = package.path..";lib/?.lua;lib/?/init.lua"
 
-require "util"
+require "util.flags"
+require "util.logging"
+require "util.string"
+require "util.io"
 
 lp = {}
 
--- for general "markers", we use 0xFE, a module-specific string, and then 0xFF
--- 0xFE and 0xFF are both outside ASCII and illegal in UTF-8, and thus should
--- (hopefully) never appear in input data
--- if you're using UTF-16, fuck off
-lp.SEP = string.char(0xFE)..","..string.char(0xFF)
-
 -- Given document text and a [name => function] mapping of macros, expand all
--- of the macros in the text. Generally this is run for one module at a time,
--- so it'll be called multiple times for any given text.
+-- of the macros in the text, recursively.
 function lp.expand(text, macros)
-    local expand_one,expand_all
+  local expand_one,expand_all
 
-    -- Replace all }{ with the special SEP sequence. Then find all macros, of
-    -- form \foo{...}, and call expand_one to expand their contents. Then turn
-    -- all SEPs back into }{.
-    function expand_all(text)
-        return (text:gsub("}{", lp.SEP):gsub([[\([^{%s]+)(%b{})]], expand_one):gsub(lp.SEP, "}{"))
+  -- Find all macros, which are basically []-delimited sexprs, and expand
+  -- each one.
+  function expand_all(text)
+    return (text:gsub('(%b[])(\n*)', expand_one))
+  end
+
+  -- Given a macro (still with the [] on it!), expand it.
+  function expand_one(text, newlines)
+    if text:sub(1,2) == '[\\' then
+      -- Things of the form [\foo ...] are escapes; this is not a macro,
+      -- just drop the \ and emit the rest as normal
+      return text:gsub('^%[\\', '[')..newlines
     end
 
-    -- We're passed a name and an argument list. The arguments are delimited
-    -- with SEP and surrounded with {} due to limitations in expand_all. Breaks
-    -- the list into individual arguments, calls the named macro with them, and
-    -- returns the result.
-    function expand_one(name, args)
-        if not macros[name] then return end
+    local name,argv = text:sub(2, -2):split(nil, 1)
+    local macro = macros[name]
 
-        args = args:sub(2,-2):split(lp.SEP)
-
-        return expand_all(macros[name](unpack(args)))
+    if not macro then
+      log.warning("Unknown macro: %s", text)
+      return
     end
 
+    log.debug("Processing macro (%s) with args (%s)", name, argv)
 
-    if macros.PRE then
-        text = macros.PRE(text) or text
+    -- 'args' at this point is still a single string, so we split it based
+    -- on the macro's argc value. If nil, they get each word as an individual
+    -- argument.
+    result = macro.fn(argv:split(nil, macro.argc))
+
+    if type(result) ~= 'string' then
+      log.error('Macro did not return a string: %s', text)
+      result = ''
     end
 
-    text = expand_all(text)
-
-    if macros.POST then
-        text = macros.POST(text) or text
+    -- Funny heuristic here. If the macro ends a line, and evaluates to the
+    -- empty string, we drop the entire line instead, and all blank lines
+    -- following. This means that things like [use] directives don't turn into
+    -- blank lines which in turn get turned into extra empty paragraphs.
+    if #result == 0 and #newlines > 0 then
+      return ''
+    else
+      return expand_all(result..newlines)
     end
+  end
 
-    return text
+  return expand_all(text)
 end
 
--- Given the name of a filter module, load it and then feed the results to
--- lp.expand.
--- This sets up an environment for the filter with some special globals set up,
--- then loads the filter module into it and calls expand.
-function lp.filter(text, filter, options)
-    local function mkenv()
-        local env = {}
-        for k,v in pairs(options or {}) do env[k] = v end
+local macros = {}
 
-        --
-        env.FILE = lp.FILE
-        env.MARK = string.char(0xFE)..filter..string.char(0xFF)
-        env._ENV = env
-
-        function env.ALIAS(new, old)
-            env[new] = old
-        end
-
-        function env.LOG(...)
-            return io.eprintf("[%s] %s\n", filter, string.format(...))
-        end
-
-        return setmetatable(env, {__index = _G})
-    end
-
-    local macros = mkenv()
-    local loader = assert(loadfile("plugins/"..filter..".lua"))
-    setfenv(loader, macros)
-    loader()
-
-    return lp.expand(text, macros)
+function macro(name, argc, fn)
+  log.debug("Registering macro %s (%s args) with %s", name, argc, fn)
+  return {
+    name = name;
+    argc = (argc and argc-1);
+    fn = fn;
+  }
 end
+
+function defmacro(...)
+  local m = macro(...)
+  if macros[m.name] then
+    log.warning("Multiple definitions of macro %s", m.name)
+  end
+  macros[m.name] = m
+end
+
+function defalias(to, from)
+  macros[to] = macros[from]
+end
+
+require "lib.core"
+flags.parse(...)
 
 -- We load each file with the "init" filter and nothing else. This defines some
 -- basic macros, including \include and \use, which the file will use (if
 -- needed) to load additional filters. \use adds the filters to a list which is
 -- run by POST once init has finished all other processing.
-for _,file in ipairs { ... } do
-    lp.FILE = file
-    lp.filter(assert(io.fdata(file)), "init")
+for _,file in ipairs(flags.parsed) do
+  FILE = file
+  print(lp.expand(io.readfile(file), macros))
 end
