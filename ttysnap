@@ -223,7 +223,24 @@ local function snap(tty, name)
   end
 end
 
+local function help(tty)
+  print [[
+f <number>      seek to frame; use +n or -n to seek forward/back that many
+<number>        ditto
+t hh:mm:ss.ms   seek to timestamp; +/- work as above; hh/mm/ms optional
+s               take a screenshot, name based on frame number
+s <label>       take a screenshot, name based on label
+,               as t +00:01
+.               as t +00:10
+/               as t +01:00
+<enter>         repeat last command
+q               quit
+]]
+end
+
 local commands = {
+  h = help;
+  help = help;
   f = seek;
   t = seektime;
   s = snap;
