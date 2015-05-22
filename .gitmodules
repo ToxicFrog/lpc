@@ -1,3 +1,6 @@
 [submodule "lib/util"]
 	path = lib/util
-	url = git@github.com:toxicfrog/luautil.git
+	url = https://www.github.com/toxicfrog/luautil
+[submodule "lib/vstruct"]
+	path = lib/vstruct
+	url = https://www.github.com/toxicfrog/vstruct

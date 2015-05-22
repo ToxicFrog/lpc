@@ -1,0 +1,202 @@
+#!/usr/bin/env luajit
+
+--[[
+ttysnap - take snapshots from ttyrec files
+depends: xterm & imagemagick
+usage: ttysnap <path to ttyrec file> <prefix to append to snapshots>
+
+When run, it creates an xterm displaying the ttyrec output and gives you a
+command line to control it from. Enter 'h' or '?' for a list of commands.
+
+At the moment it's hard-coded for DoomRL-friendly settings. TODO: add flags.
+]]
+
+package.path = package.path .. ";lib/?.lua;lib/?/init.lua"
+
+local vstruct = require "vstruct"
+require "util.string"
+require "util.io"
+
+local colours = {
+  [4] = 'orange'; -- dim yellow
+}
+
+local TTY = {}
+
+function TTY:init(ttyrec)
+  local tty = setmetatable({}, {__index = TTY})
+  tty.fd = assert(io.open(ttyrec), 'rb')
+  -- constants
+  local s,us = vstruct.readvals('u4 u4', tty.fd)
+  tty.start = s + (us/1e6)      -- starting time of recording
+  tty.eof = tty.fd:seek('end')  -- end of file offset
+  -- state
+  tty.frame = -1            -- current frame displayed in terminal
+  tty.time = 0      -- current time
+  tty.where = 0             -- read pointer offset
+
+  -- start child process
+  -- there's some ugly hacks here
+  -- first, we create a fifo named /tmp/<current time>, which is totes insecure
+  tty.fifoname = "/tmp/%d" % os.time()
+  os.execute("mkfifo '%s'" % tty.fifoname)
+  -- then we open an xterm in the background
+  os.execute(
+      "xterm -T ttysnap -ah -geometry 80x25 -fa Cousine -fs 16 -bg black +sb -e cat '%s' &" % tty.fifoname)
+  -- and finally we open the fifo to it so we can send it stuff.
+  tty.xterm = assert(io.open(tty.fifoname, 'w'))
+
+  -- initialize custom colourmap
+  for id,colour in pairs(colours) do
+    tty.xterm:write('\x1B]%d;3;%s\x07' % {id, colour})
+  end
+
+  -- display first frame
+  tty.fd:seek('set')
+  tty:seek(0)
+  return tty
+end
+
+function TTY:close()
+  self.xterm:close()
+  os.remove(self.fifoname)
+end
+
+function TTY:rewind()
+  -- rewind to start
+  self.frame = -1
+  self.fd:seek('set')
+  self.time = 0
+  self.where = 0
+  self.xterm:write('\x1B[2J') -- CSI 2 J; Erase Display: All
+end
+
+function TTY:step()
+  -- write one frame
+  local frame = vstruct.read('s:u4 us:u4 data:c4', self.fd)
+  self.xterm:write(frame.data)
+  self.frame = self.frame + 1
+  self.time = (frame.s + frame.us/1e6) - self.start
+  self.where = self.fd:seek()
+end
+
+function TTY:seek(to_frame)
+  to_frame = math.max(to_frame, 0)
+  if self.frame > to_frame then
+    self:rewind()
+  end
+
+  while self.frame < to_frame and self.where < self.eof do
+    self:step()
+  end
+
+  self.xterm:flush()
+end
+
+function TTY:seektime(to_time)
+  to_time = math.max(to_time, 0)
+  if self.time > to_time then
+    self:rewind()
+  end
+
+  while self.time < to_time and self.where < self.eof do
+    self:step()
+  end
+
+  self.xterm:flush()
+end
+
+local function strtime(t)
+  return string.format(
+    "%02d:%02d:%06.3f",
+    math.floor(t/60/60), -- hours
+    math.floor(t/60) % 60, -- minutes
+    t % 60) -- seconds
+end
+
+-- frame is either an absolute frame number, or +n or -n to seek that many
+-- frames ahead/behind.
+local function seek(tty, frame)
+  if not tonumber(frame) then
+    print("Invalid frame number: "..frame)
+    return
+  end
+
+  if frame:match("^[-+]") then
+    tty:seek(tonumber(frame) + tty.frame)
+  else
+    tty:seek(tonumber(frame))
+  end
+end
+
+-- time is either an absolute timestamp as hh:mm:ss.ms, or prefix with +/- as f
+local function seektime(tty, t)
+  local dir
+  if t:match('^[-+]') then
+    dir,t = t:match('^([-+])(.*)')
+    dir = tonumber(dir.."1") -- turn it into +1 or -1
+  end
+
+  local h,m,s = t:split(':')
+  if not m then -- only seconds specified
+    h,m,s = 0,0,h
+  elseif not s then -- only minutes and seconds specified
+    h,m,s = 0,h,m
+  end
+
+  if not (tonumber(h) and tonumber(m) and tonumber(s)) then
+    print("Invalid time: "..t)
+    return
+  end
+
+  t = 60*60*tonumber(h) + 60*tonumber(m) + tonumber(s)
+  if dir then
+    tty:seektime(tty.time + t * dir)
+  else
+    tty:seektime(t)
+  end
+end
+
+-- take a snapshot. If name is unspecified, name it with the current time.
+local function snap(tty, name)
+  name = PREFIX .. (name or strtime(tty.time)) .. ".png"
+  os.execute('import -window ttysnap "%s"' % name)
+end
+
+local commands = {
+  f = seek;
+  t = seektime;
+  s = snap;
+  [","] = function(tty) seektime(tty, "+00:01") end;
+  ["."] = function(tty) seektime(tty, "+00:10") end;
+  ["/"] = function(tty) seektime(tty, "+01:00") end;
+  q = function(tty) tty:close(); os.exit(0); end;
+}
+
+local function main(ttyrec, prefix)
+  PREFIX = prefix or ""
+  local tty = TTY:init(ttyrec)
+  print "done init"
+
+  local lastcmd,lastargs = nil,nil
+  while true do
+    printf("%s %6d] ", strtime(tty.time), tty.frame)
+    io.flush()
+    local cmd,args = io.read():split(nil, 1)
+    if cmd == "" then
+      cmd,args = lastcmd,lastargs
+    end
+    if tonumber(cmd) then
+      cmd,args = "f",cmd
+    end
+
+    if commands[cmd] then
+      lastcmd,lastargs = cmd,args
+      commands[cmd](tty, args)
+    else
+      printf("Error: unknown command: '%s'\n", cmd)
+    end
+  end
+end
+
+print(pcall(main, ...))
