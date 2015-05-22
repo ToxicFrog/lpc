@@ -7,8 +7,6 @@ usage: ttysnap <path to ttyrec file> <prefix to append to snapshots>
 
 When run, it creates an xterm displaying the ttyrec output and gives you a
 command line to control it from. Enter 'h' or '?' for a list of commands.
-
-At the moment it's hard-coded for DoomRL-friendly settings. TODO: add flags.
 ]]
 
 package.path = package.path .. ";lib/?.lua;lib/?/init.lua"
@@ -16,20 +14,59 @@ package.path = package.path .. ";lib/?.lua;lib/?/init.lua"
 local vstruct = require "vstruct"
 require "util.string"
 require "util.io"
+require "util.flags"
 
-local colours = {
-  [4] = 'orange'; -- dim yellow
+flags.register ("palette") {
+  help = "Provide a custom palette, e.g. --palette 4=orange,12=yellow";
+  type = flags.mapOf(flags.number, flags.string);
+  default = {};
+}
+
+flags.register ("term-size") {
+  help = "Terminal size, widthxheight";
+  type = flags.string;
+  default = "80x24";
+}
+
+flags.register ("font") {
+  help = "XTerm font";
+  type = flags.string;
+  default = "Cousine";
+}
+
+flags.register ("font-size") {
+  help = "XTerm font size";
+  type = flags.number;
+  default = 16;
+}
+
+flags.register ("prefix") {
+  help = "Prefix for saved snapshots; $P expands to ttyrec path, $N to ttyrec basename";
+  type = flags.string;
+  default = "$P.";
+}
+
+flags.register ("timestamps") {
+  help = "Use HH:mm:ss.ms as the default name for snapshots rather than frame number.";
+}
+
+flags.register ("help", "h") {
+  help = "This text";
 }
 
 local TTY = {}
 
-function TTY:init(ttyrec)
+function TTY:init(ttyrec, options)
   local tty = setmetatable({}, {__index = TTY})
+  tty.file = ttyrec
   tty.fd = assert(io.open(ttyrec), 'rb')
+
   -- constants
   local s,us = vstruct.readvals('u4 u4', tty.fd)
   tty.start = s + (us/1e6)      -- starting time of recording
   tty.eof = tty.fd:seek('end')  -- end of file offset
+  tty.options = options
+
   -- state
   tty.frame = -1            -- current frame displayed in terminal
   tty.time = 0      -- current time
@@ -40,14 +77,21 @@ function TTY:init(ttyrec)
   -- first, we create a fifo named /tmp/<current time>, which is totes insecure
   tty.fifoname = "/tmp/%d" % os.time()
   os.execute("mkfifo '%s'" % tty.fifoname)
+
   -- then we open an xterm in the background
-  os.execute(
-      "xterm -T ttysnap -ah -geometry 80x25 -fa Cousine -fs 16 -bg black +sb -e cat '%s' &" % tty.fifoname)
+  local cmd = "xterm -T ttysnap -ah -geometry %s -fa %s -fs %d -bg black +sb -e cat '%s' &" % {
+    options.term_size,
+    options.font,
+    options.font_size,
+    tty.fifoname,
+  }
+  assert(os.execute(cmd))
+
   -- and finally we open the fifo to it so we can send it stuff.
   tty.xterm = assert(io.open(tty.fifoname, 'w'))
 
   -- initialize custom colourmap
-  for id,colour in pairs(colours) do
+  for id,colour in pairs(options.palette) do
     tty.xterm:write('\x1B]%d;3;%s\x07' % {id, colour})
   end
 
@@ -106,6 +150,14 @@ function TTY:seektime(to_time)
   self.xterm:flush()
 end
 
+function TTY:snap(name)
+  name = self.options.prefix
+    :gsub("$P", (self.file:gsub("%.[^%.]+$", "")))
+    :gsub("$N", (self.file:match("[^/]+$"):gsub("%.[^%.]+$", "")))
+    ..name..".png"
+  return os.execute('import -window ttysnap "png:%s"' % name) and name
+end
+
 local function strtime(t)
   return string.format(
     "%02d:%02d:%06.3f",
@@ -159,8 +211,16 @@ end
 
 -- take a snapshot. If name is unspecified, name it with the current time.
 local function snap(tty, name)
-  name = PREFIX .. (name or strtime(tty.time)) .. ".png"
-  os.execute('import -window ttysnap "%s"' % name)
+  if tty.options.timestamps then
+    name = tty:snap(name or strtime(tty.time))
+  else
+    name = tty:snap(name or "%08d" % tty.frame)
+  end
+  if name then
+    print("Snapshot saved to %s" % name)
+  else
+    print("Error saving snapshot.")
+  end
 end
 
 local commands = {
@@ -174,9 +234,13 @@ local commands = {
 }
 
 local function main(ttyrec, prefix)
+  if flags.parsed.help then
+    flags.help()
+    return 0
+  end
+
   PREFIX = prefix or ""
-  local tty = TTY:init(ttyrec)
-  print "done init"
+  local tty = TTY:init(ttyrec, flags.parsed)
 
   local lastcmd,lastargs = nil,nil
   while true do
@@ -199,4 +263,4 @@ local function main(ttyrec, prefix)
   end
 end
 
-print(pcall(main, ...))
+return main(unpack(flags.parse(...)))
