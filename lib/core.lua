@@ -86,6 +86,10 @@ defmacro('use', nil, use)
 defmacro('--', 1, comment)
 defmacro('include', 1, include)
 defmacro('def', 3, def)
+defmacro('defalias', 2, function(to, from)
+  defalias(to, from)
+  return ''
+end)
 
 -- return {
 --   macro('use', '*', use)
