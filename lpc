@@ -25,8 +25,21 @@ require "packages"
 
 flags.parse(...)
 
+local postprocessors = {}
+function lp.postprocess(f)
+  table.insert(postprocessors, f)
+end
+
 FILE = assert(flags.parsed[1])
 for _,package in ipairs(flags.parsed.package) do
   lp.use(package)
 end
-io.writefile(flags.parsed.out, lp.expand(io.readfile(FILE)))
+
+log.info('Processing file %s', FILE)
+local data = lp.expand(io.readfile(FILE))
+log.info('Running postprocessing functions.')
+for _,fn in ipairs(postprocessors) do
+  data = fn(data) or data
+end
+io.writefile(flags.parsed.out, data)
+log.info('Written to %s', flags.parsed.out)

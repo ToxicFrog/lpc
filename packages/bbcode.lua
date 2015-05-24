@@ -71,15 +71,3 @@ lp.defmacro("emote", 1, function(name)
   return emotes[name] or (":%s:" % name)
 end)
 
--- italic
--- we use MARK here so that \i{The good ship \i{Mary Celeste}} comes out
--- properly, ie, nested italics toggle it on and off
--- the POST rule will turn them into actual italic markers
-function i(text)
-  return MARK..text..MARK
-end
-
---------------------------------------------------------------------------------
---      Emotes
---------------------------------------------------------------------------------
-

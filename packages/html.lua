@@ -1,106 +1,91 @@
--- Generates HTML output. Does not actually save to file; combine with
--- \out to save it somewhere.
+-- Generates HTML output.
 
--- {emote_path=smilies/} OPTIONAL. prefix emoticons with this path. Default is 'smilies/'
--- {emote_type=gif} OPTIONAL. suffix emoticons with this extension. Default is 'gif'.
+local defaults = {
+  emote_path = "emote/";
+  emote_type = "gif";
+}
+local options = setmetatable(..., {__index = defaults})
 
-emote_path = emote_path or "smilies/"
-emote_type = emoty_type or "gif"
+local function tag(t)
+  local open,close = "<"..t..">","</"..t..">"
 
-function simple(tag)
-    local open,close = "<"..tag..">","</"..tag..">"
-    
-    _ENV[tag] = function(text) return "<%s>%s</%s>" % { tag, text, tag } end
+  lp.defmacro(t, 1, function(text)
+    return open..text..close
+  end)
 end
 
 --------------------------------------------------------------------------------
 --      Basic Formatting
 --------------------------------------------------------------------------------
 
--- bold
-simple "b"
+-- Tags that are just open-content-close with no subtleties.
+local simple_tags = { "b", "u", "s", "sup", "sub", "tt" }
+for _,t in ipairs(simple_tags) do
+  tag(t)
+end
 
--- underline
-simple "u"
-
--- strikethrough
-simple "s"
-
--- superscript
-simple "sup"; ALIAS("^", sup); ALIAS("super", sup)
-
--- subscript
-simple "sub"; ALIAS("_", sub)
-
--- fixed width
-simple "tt"; ALIAS("fixed", tt)
+lp.defalias("^", "super")
+lp.defalias("_", "sub")
+lp.defalias("fixed", "tt")
 
 -- hidden spoiler
-function spoiler(text)
-    return [[<span class="bbc-spoiler" onmouseover="this.style.color='#FFFFFF';" onmouseout="this.style.color=this.style.backgroundColor='#000000'">&nbsp;%s&nbsp;</span>]]
-    % text
-end
+lp.defmacro("spoiler", 1, function(text)
+  return [[<span class="bbc-spoiler"]]
+    .. [[ onmouseover="this.style.color='#FFFFFF';"]]
+    .. [[ onmouseout="this.style.color=this.style.backgroundColor='#000000'">&nbsp;]]
+    .. text
+    .. [[&nbsp;</span>]]
+end)
 
 -- preformatted block
-function pre(text)
-    return quote(pre(text))
-end
-
--- code block
-function code(text)
-    return quote(pre(text))
-end
+lp.defmacro('pre', 1, function(text)
+  return '[quote [tt '..text..']]'
+end)
+lp.defalias('code', 'pre')
 
 -- quote block
-function quote(who, what)
-    if not what then
-        return [[<div class="bbc-block"><blockquote>%s</blockquote></div>]] % who
-    else
-        return [[<div class="bbc-block"><blockquote><h5>%s posted:</h5>%s</blockquote></div>]] % { who, what }
-    end
-end
+lp.defmacro('quote', 2, function(who, text)
+  if who == '.' then
+    return [[<div class="bbc-block"><blockquote>]]..text..[[</blockquote></div>]]
+  else
+    return [[<div class="bbc-block"><blockquote><h5>]]
+      ..who..[[posted:</h5>]]..text..[[</blockquote></div>]]
+  end
+end)
 
--- italic
--- we use MARK here so that \i{The good ship \i{Mary Celeste}} comes out
--- properly, ie, nested italics toggle it on and off
--- the POST rule will turn them into actual italic markers
-function i(text)
-    return MARK..text..MARK
-end
+-- Italics. This is hinky because we want nested italics to act as a toggle,
+-- so that things like [i the starship [i Von Braun]] come out properly.
+-- We handle this by registering two macros, i to turn italics on and !i to turn
+-- them off; then we replace all i with !i in the body before returning.
+lp.defmacro("i", 1, function(text)
+  local function toggle(text)
+    return text:gsub('^%[i ', '[!i ')
+  end
+  return '<i>'..text:gsub('%b[]', toggle)..'</i>'
+end)
+lp.defmacro("!i", 1, function(text)
+  return '</i>'..text..'<i>'
+end)
 
-function POST(text)
-    local italic = false
-    
-    text = text:gsub(MARK, function()
-        italic = not italic
-        return italic and "<i>" or "</i>"
-    end)
-    
-    return text:trim()
-end
+-- Emotes.
+lp.defmacro('emote', 1, function(name)
+  return "[image %s%s.%s]" % { options.emote_path, name, options.emote_type }
+end)
 
---------------------------------------------------------------------------------
---      Emotes
---------------------------------------------------------------------------------
+lp.defmacro('url', 2, function(url, text)
+  text = text or url
+  return '<a href="'..url..'">'..text..'</a>'
+end)
+lp.defalias('link', 'url')
 
-function emote(name)
-    return img("%s%s.%s" % { emote_path, name, emote_type })
-end
+-- Images. TODO: click-to-resize on timg.
+lp.defmacro('image', 1, function(url)
+  return '<img src="'..url..'">'
+end)
+lp.defmacro('thumbnail', 1, function(url)
+  return '<img width="256px" src="'..url..'">'
+end)
 
---------------------------------------------------------------------------------
---      External References
---------------------------------------------------------------------------------
-
--- hyperlink
-function url(url, text)
-    return '<a href="%s">%s</a>' % { url, text or url }
-end
-
--- inline images
-function img(url)
-    return '<img src="%s">' % url
-end
-
-function timg(url)
-    return '<img src="%s" width="170px">' % url
-end
+lp.postprocess(function(text)
+  return text:gsub('\n+', '<p>')
+end)

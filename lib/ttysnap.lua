@@ -1,4 +1,5 @@
 local vstruct = require "vstruct"
+require "util.logging"
 
 local TTY = {}
 
@@ -22,6 +23,7 @@ function TTY:init(ttyrec, options)
   -- there's some ugly hacks here
   -- first, we create a fifo named /tmp/<current time>, which is totes insecure
   tty.fifoname = "/tmp/%d" % os.time()
+  log.debug('Creating fifo %s', tty.fifoname)
   os.execute("mkfifo '%s'" % tty.fifoname)
 
   -- then we open an xterm in the background
@@ -31,6 +33,7 @@ function TTY:init(ttyrec, options)
     options.font_size,
     tty.fifoname,
   }
+  log.debug('Creating XTterm with command line: %s', cmd)
   assert(os.execute(cmd))
 
   -- and finally we open the fifo to it so we can send it stuff.
@@ -38,7 +41,8 @@ function TTY:init(ttyrec, options)
 
   -- initialize custom colourmap
   for id,colour in pairs(options.palette) do
-    tty.xterm:write('\x1B]%d;3;%s\x07' % {id, colour})
+    log.debug('Overriding colourmap entry: %d = %s', id, colour)
+    tty.xterm:write('\x1B]4;%d;%s\x07' % {id, colour})
   end
 
   -- display first frame

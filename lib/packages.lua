@@ -20,6 +20,7 @@ flags.register('package', 'l') {
 -- file specified; failing that it looks for one ending in .lpc, then one ending
 -- in .lua. It stops after the first one it finds.
 function lp.use(package, ...)
+  log.info('Loading package %s', package)
   local options = {}
   for _,opt in ipairs {...} do
     local k,v = opt:match('([^=]+)=(.*)')

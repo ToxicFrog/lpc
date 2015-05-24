@@ -77,7 +77,7 @@ function lp.defmacro(...)
   if macros[m.name] then
     log.warning("Multiple definitions of macro %s", m.name)
   end
-  log.debug("Registering macro %s (%s args) with %s", name, argc, fn)
+  log.debug("Registering macro %s (%s args) with %s", m.name, m.argc, m.fn)
   macros[m.name] = m
 end
 
