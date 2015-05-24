@@ -50,3 +50,9 @@ function lp.use(package, ...)
   log.error('Unable to load package: %s', package)
   return ''
 end
+
+function lp.options(opts)
+  return function(defaults)
+    return setmetatable(opts, {__index = defaults})
+  end
+end

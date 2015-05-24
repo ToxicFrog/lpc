@@ -3,19 +3,16 @@ require "util.flags"
 require "util.io"
 require "util.string"
 
-local defaults = {
-  palette = {};
+local options = lp.options(...) {
+  palette = '';
   term_size = '80x24';
   font = 'Cousine';
   font_size = 16;
   prefix = 'ttysnap/';
 }
-local options = setmetatable(..., {__index = defaults})
 
 -- parse options that need parsing
-if type(options.palette) == 'string' then
-  options.palette = flags.mapOf(flags.number, flags.string)(nil, options.palette)
-end
+options.palette = flags.mapOf(flags.number, flags.string)(nil, options.palette)
 options.font_size = tonumber(options.font_size)
 
 local tty
@@ -33,5 +30,5 @@ lp.defmacro('ttysnap', 1, function(frame)
     tty:seek(frame)
     tty:snap(name)
   end
-  return '[image %s]' % name
+  return '[img %s]' % name
 end)

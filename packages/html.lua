@@ -1,10 +1,9 @@
 -- Generates HTML output.
 
-local defaults = {
+local options = lp.options(...) {
   emote_path = "emote/";
   emote_type = "gif";
 }
-local options = setmetatable(..., {__index = defaults})
 
 local function tag(t)
   local open,close = "<"..t..">","</"..t..">"

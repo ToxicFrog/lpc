@@ -1,50 +1,44 @@
 local cache = {}
 
-local function loadcache(name, obj)
-    for line in io.lines(".cache-"..name) do
-        local k,v = line:match("([^\t])+\t(.*)")
-        obj[k] = v
-    end
+local function loadcache(path, obj)
+  local count = 0
+  for line in io.lines(path) do
+    count = count + 1
+    local k,v = line:match("([^\t]+)\t(.*)")
+    obj[k] = v
+  end
+  log.debug("cache: loaded %d entries from %s", count, path)
 end
 
-function cache.open(name)
-    local obj = {}
-    
-    -- read cache contents
-    pcall(loadcache, name, obj)
-    
-    return setmetatable(obj, { __index = cache, name = name })
+function cache.open(path)
+  log.debug("cache: opening %s", path)
+  local obj = {}
+
+  -- read cache contents
+  if io.exists(path) then
+    loadcache(path, obj)
+  end
+
+  return setmetatable(obj, { __index = cache, path = path })
 end
 
-function cache:get(path)
-    return self[self:key(path)]
+function cache:get(key)
+  return self[key]
 end
 
-function cache:put(path, url)
-    self[self:key(path)] = url
-end
-
-function cache:key(path)
-    local fd = io.open(path, "r")
-    if not fd then
-        return 0 -- dummy key - missing files are never reported to exist in the cache
-    end
-    
-    local size = fd:seek("end")
-    fd:close()
-    
-    return [[%d%s]] % { size, path }
+function cache:put(key, value)
+  self[key] = value
 end
 
 function cache:save()
-    -- write cache contents
-    local fd = assert(io.open(".cache-"..getmetatable(self).name, "w"))
-    
-    for k,v in pairs(self) do
-        fd:write([[%s\t%s\n]] % { k, v })
-    end
-    
-    fd:close()
+  -- write cache contents
+  local fd = assert(io.open(getmetatable(self).path, "w"))
+
+  for k,v in pairs(self) do
+    fd:write("%s\t%s\n" % { k, v })
+  end
+
+  fd:close()
 end
 
 return cache

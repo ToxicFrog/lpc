@@ -1,3 +1,6 @@
+require "util.string"
+require "util.io"
+
 local http = require "socket.http"
 local ltn12 = require "ltn12"
 
@@ -31,7 +34,7 @@ function post:file(key, filename)
         'Content-Disposition: form-data; name="%s"; filename="%s"' % { key, filename },
         'Content-Type: application/octet-stream',
         '',
-        io.fdata(filename)
+        io.readfile(filename)
     )
 end
 
@@ -43,10 +46,10 @@ function post:post(url, progress)
         ["content-length"] = tostring(#body);
         ["accept"] = "text/xml";
     }
-    
+
     local response = {}
     local source = ltn12.source.string(body);
-    
+
     if progress then
         local _source = source
         local sent = 0
@@ -57,7 +60,7 @@ function post:post(url, progress)
             return data
         end
     end
-    
+
     local r,e = http.request {
         method = "POST";
         url = url;
@@ -65,11 +68,11 @@ function post:post(url, progress)
         source = source;
         sink = ltn12.sink.table(response);
     }
-    
+
     if not r then
         return nil,tostring(e)
     end
-    
+
     return table.concat(response)
 end
 

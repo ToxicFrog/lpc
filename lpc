@@ -18,12 +18,20 @@ flags.register ("out", "o") {
   type = flags.string;
 }
 
+flags.register ("cache") {
+  help = "The file to store lpc cache data in between runs.";
+  type = flags.string;
+  default = "./.lpc-cache";
+}
+
 lp = {}
 
 require "macros"
 require "packages"
 
 flags.parse(...)
+
+lp.cache = require('cache').open(flags.parsed.cache)
 
 local postprocessors = {}
 function lp.postprocess(f)
@@ -32,14 +40,16 @@ end
 
 FILE = assert(flags.parsed[1])
 for _,package in ipairs(flags.parsed.package) do
-  lp.use(package)
+  lp.use(package:split(','))
 end
 
 log.info('Processing file %s', FILE)
 local data = lp.expand(io.readfile(FILE))
+
 log.info('Running postprocessing functions.')
 for _,fn in ipairs(postprocessors) do
   data = fn(data) or data
 end
+
 io.writefile(flags.parsed.out, data)
 log.info('Written to %s', flags.parsed.out)
