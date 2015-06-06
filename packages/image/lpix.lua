@@ -20,10 +20,16 @@ assert(options.user, "No username specified for lpix.")
 assert(options.pass, "No password specified for lpix.")
 
 local function key(path)
+  if not io.exists(path) then return end
   return "lpix:%s:%d" % { path, io.size(path) }
 end
 
 local function upload(path)
+  if not io.exists(path) then
+    log.error("lpix: no such file: %s", path)
+    return
+  end
+
   log.info('lpix: uploading %s', path)
 
   local result,err = lpix.upload(options.user, options.pass, path, options.gallery)
