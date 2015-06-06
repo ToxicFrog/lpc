@@ -38,7 +38,7 @@ end)
 
 -- preformatted block
 lp.defmacro('pre', 1, function(text)
-  return '[quote [tt '..text..']]'
+  return '[quote <pre>'..text..'</pre>]'
 end)
 lp.defalias('code', 'pre')
 
@@ -48,7 +48,7 @@ lp.defmacro('quote', 2, function(who, text)
     return [[<div class="bbc-block"><blockquote>]]..text..[[</blockquote></div>]]
   else
     return [[<div class="bbc-block"><blockquote><h5>]]
-      ..who..[[posted:</h5>]]..text..[[</blockquote></div>]]
+      ..who..[[ posted:</h5>]]..text..[[</blockquote></div>]]
   end
 end)
 
