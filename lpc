@@ -1,4 +1,4 @@
-#!/usr/bin/env luajit
+#!/usr/bin/env lua5.2
 
 BASEDIR = arg[0]:gsub("[^/]+$", '')
 if not BASEDIR:match('^/') then
