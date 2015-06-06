@@ -114,10 +114,10 @@ end
 
 -- take a snapshot. If name is unspecified, name it with the current time.
 local function snap(tty, name)
-  local prefix = self.options.prefix
-    :gsub("$P", (self.file:gsub("%.[^%.]+$", "")))
-    :gsub("$N", (self.file:match("[^/]+$"):gsub("%.[^%.]+$", "")))
-  if tty.options.timestamps then
+  local prefix = flags.parsed.prefix
+    :gsub("$P", (flags.parsed[1]:gsub("%.[^%.]+$", "")))
+    :gsub("$N", (flags.parsed[1]:match("[^/]+$"):gsub("%.[^%.]+$", "")))
+  if flags.parsed.timestamps then
     name = tty:snap(prefix .. (name or strtime(tty.time)) .. ".png")
   else
     name = tty:snap(prefix .. (name or "%08d" % tty.frame) .. ".png")
