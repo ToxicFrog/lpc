@@ -32,7 +32,7 @@ lp.defalias("tt", "fixed")
 -- Quote block with optional name. [quote . text] omits the name.
 lp.defmacro("quote", 2, function(name, text)
   if name ~= "." then
-    return "[\\quote=%s]%s[\\/quote]" % { name, text }
+    return "[\\quote=\"%s\"]%s[\\/quote]" % { name, text }
   else
     return "[\\quote]%s[\\/quote]" % text
   end
