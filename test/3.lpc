@@ -1,0 +1,395 @@
+[use ttysnap
+  file=../145.ttyrec
+  prefix=ss/
+  term_size=80x25
+  palette=3=orange,9=#FF0000]
+[defalias ss ttysnap]
+
+[image http://lpix.org/2063114/19.png]
+
+[b DoomRL, Episode 3: Infern@]
+
+As with the start of Episode 2, Episode 3 drops us straight into the first level. First, though, I need to deal with that level-up I got from killing the Cyberdemon.
+
+[quote Berserker "Who's a man and a half? I'm a man and a half! Berserker packin' man and a half!""
+
+You hate this place, you hate these stupid monsters, and you HATE that this is all happening to you. In fact you hate it so much that there's a chance that you'll fly into a berserk rage when you repeatedly smack something in melee, or get hit hard enough. (NOTE: You do NOT get the healing effect of a Berserk Pack.)]
+
+Another melee-focused trait, Berserker largely mitigates the biggest problem with fighting in melee (it's impossible to avoid taking damage) by giving you all the sky-high resistances and haste effect of Berserking whenever you start mixing it up in close combat.
+
+[ss 70097]
+
+And here we are in the depths of Hell itself! The "walls here seem tough" level feeling means that the walls can't be destroyed by any means, so no blasting our way around obstacles with the rocket launcher.
+
+[ss 72206]
+
+Hell has a red color scheme and more lava, but uses the same level generation algorithms as the rest of the game, so things look pretty familiar here. Revenants are showing up more often now, though, and Pain Elementals can appear as normal spawns.
+
+There are two items of interest here: the Plasma Shield and a Sniper Pack. The former is 0-protection armour that grants 95% resistance to plasma, which would be great for some nasty enemies if it could be repaired or modified -- but it can't be. The latter is a rare modpack that can only be applied to weapons, and removes all distance penalties for accuracy from them.
+
+And I forget about it and walk out of the level leaving it behind. [emote doh] It would have been great on a plasma rifle.
+
+[ss 72481]
+
+It also introduces this guy: the Mancubus.
+
+[quote . It's big, it's mean, and it has two rocket launchers. What could be worse?]
+
+Despite the description (and the original spritework), the Mancubus actually fires [i three] rockets with each attack, one at you and one to either side. It's technically dodgeable, but it's really hard to avoid all three rockets and all the splash damage from them slamming into nearby terrain.
+
+To make matters worse, the turn after it fires, it'll fire another spread of rockets whether it can still see you or not. The one saving grace is that the rockets are less powerful than standard rocket launcher projectiles.
+
+[ss 72887]
+
+Mancubus dead, I equip the chainsaw and descend the red stairs to the Unholy Cathedral.
+
+Why the chainsaw, when it's seen no use so far? Well, the Cathedral is a level that would be very easy if not for one unique restriction: [b melee weapons only]. On most playthroughs I skip this level entirely -- or, if I'm playing a melee-focused character, I clear this level but skip other ones. But for this LP I've promised to clear every level -- thus my earlier investments in melee traits.
+
+[ss 72972]
+
+Room one is full of Lost Souls. Even characters that haven't invested in melee skills can probably handle this one.
+
+[ss 73073]
+
+Room two is full of demons. This is bit rougher, since demons are tougher, meaner, and smarter than lost souls. My Berserk kicks in almost immediately, though, and then it's all over for them.
+
+[ss 73181]
+
+The last room contains a single enemy, the Angel of Death.
+
+[quote . Why doesn't a BFG work when you really need it? As if from a half forgotten nightmare, you encounter the harbinger of death...]
+
+At last a foe worthy of my skills. [emote black101] I shove my chainsaw through its face so hard that the cathedral collapses, then claim my prize: the Longinus Spear, aka the Lance of Longinus or the Spear of Destiny. The chainsaw is left behind to mark the place where I slew Death and I take up the spear; an [b 8d8 plasma] weapon that can be activated once per rest to deal [b 10d10 fire] to all enemies in 3 squares.
+
+Melee will be featured a bit more often from now on.
+
+[ss 73472]
+
+Another new level feeling, "the air seems deadly here" means I gradually take damage as long as I'm in the level. The good news is that most enemies will also take damage. Thanks to this the level goes pretty quickly, with most rooms containing piles of ammo and corpses by the time I get to them.
+
+[ss 76907]
+
+Hell 3 is aggravating because it's bisected by a giant river of acid. Rivers like this have appeared in a few previous levels, but this is the first time it's been a real problem, because any such river is guaranteed to generate with a bridge as well. This time, however, I can't get to the bridge.
+
+[ss 77138]
+
+Fortunately the walls can be destroyed by explosives.
+
+[ss 78983]
+
+I loot the rest of the level -- which contains nothing of interest -- and head downstairs to the Vaults.
+
+[ss 79210]
+
+The vaults consist of three completely enclosed circular rooms full of loot and enemies. The left and right ones each have a tiny weak point that can be cracked open by explosives. The center vault cannot be damaged by any means.
+
+[ss 79243]
+
+Behind the left door we have Barons of Hell. Luring them around a corner and into the Lance proves very effective against them, and even gets me a level-up, which I put into Finesse.
+
+[quote Finesse "Dance! Dance, bonedaddy!"
+
+Have you heard of an itchy trigger finger? Yours are itchier than the chicken pox, and because of that you can fire rounds and attack 15% faster with every level of this trait.]
+
+Increased attack speed means increased damage per second and fewer chances for the enemies to hurt you. Finesse is fantastic and is also a prerequisite for Whizkid, which lets you make some truly overpowered gear using modpacks.
+
+[ss 79447]
+
+The Barons are all killed and I run into the vault to discover that [i it is Christmas time in Hell]. The Nuclear Plasma Rifle holds less charge than the standard version, but never needs to be reloaded; instead, it starts regenerating ammo after a few turns without firing. In a pinch, you can also overload the reactor, turning it into a nuclear bomb on a short timer (but if you aren't invulnerable, it'll turn you to ash along with everything else on the level).
+
+My vintage plasma rifle is immediately dropped in favour of this, but I still grab some energy cells from elsewhere in the vault to feed my BFG with.
+
+[ss 79897]
+
+The right vault contains Arachnotrons. They don't fare any better against the Spear of Destiny.
+
+[ss 80218]
+
+This is where I discover that the game loves me. This vault contains our first Unique. Like Specials, these are rare, powerful weapons and armour; unlike Specials, you will never find duplicates (hence the name) and they cannot be modified. Many of them have unique powers not available in any other way.
+
+This is the Trigun, a pistol inspired by the anime of the same name (many of the uniques are references to other works). As a pistol it's pretty good, but it's not the primary fire mode I want it for. It goes in the backpack for later.
+
+[ss 80303]
+
+Hell is where a lot of earlier setup starts to pay off. First the melee training for the Cathedral, and now the Arena Master's Staff, picked up way back in the Chained Court. Using it here shatters the staff, but opens all three vaults.
+
+The center vault proves to be the least interesting of the three, containing a mix of Arachnotrons and Barons, but no interesting items apart from the Duelist Armour. This light armour gives you bullet, melee, and shrapnel resistance and a movespeed bonus, but is obsolete now that most enemies have fire, acid, or plasma attacks and I'm wearing power armour.
+
+[ss 82751]
+
+Another level, another level feeling -- "something really valuable here" means that a Unique has generated somewhere on the level.
+
+[ss 82923]
+
+In this case that unique is the Acid Spitter. This highly unusual gun fires exploding acid balls that do massive damage and leave acid pools behind, but can only be reloaded by standing in acid (and converts the acid to water in doing so). It's great if you're immune to acid, but I'm not.
+
+[ss 82947]
+
+We also finally see our first Arch-Vile!
+
+[quote . The worst thing you could encounter. With some unholy power far beyond your grasp they attack you with hellish flame, and are able to summon back the enemies you've worked so hard to banish!]
+
+We ran into our first one way back in the Chained Court in the form of the Arena Master, but they don't start spawning naturally until Hell. Their fire attack does a flat 20 damage (40% of your health before resistances and armour!) and the way they keep resurrecting enemies around you makes it hard to concentrate on just them.
+
+This level proves to be a bit tense due to a profusion of enemies with AoE attacks and napalm barrels, but I manage to make it through safely. After clearing the level, I equip my BFG and rocket launcher and descend into Limbo.
+
+[ss 85319]
+
+Limbo is one of the nastiest levels in the game, probably beaten only by its alternate version, the Mortuary. The level contains narrow catwalks over lava strewn with hundreds of corpses...and six randomly placed Arch-Viles. Initially they're the only enemies on the level, but they can rapidly raise an insurmountable army.
+
+This time I got lucky and three of the Arch-Viles spawned in sight of me.
+
+[ss 85349]
+
+When you enter a level, you have about four seconds of free actions before the enemies "wake up" and start acting. I take advantage of this by running south and grabbing one of the Supercharge globes. None of the other items on this platform will survive what's about to happen.
+
+[ss 85380]
+
+Specifically, me firing the BFG.
+
+[ss 85625]
+
+Two shots to the north kill at least one of the Arch-Viles. A fourth appears to the southwest and eats my third BFG shot. Even the non-killing shots send them flying, interrupting their pyrokinesis and sending the enemies they just raised tumbling into the lava.
+
+This also showcases a neat feature of the BFG carried over from Doom itself: while it has a huge blast radius, it doesn't harm its wielder.
+
+[ss 87119]
+
+Three more shots and I've cleared out all four of the Arch-Viles that spawned near the central platform and can start clearing the rest of the level. These levers raise catwalks connecting the central square to platforms in the four corners of the map.
+
+[ss 87930]
+
+Along the way there are these side areas. The fact that they're still full of corpses means no Arch-Vile spawned in this area, but the fact that I just killed a Baron of Hell means that there's at least one to the east.
+
+[ss 88348]
+
+A nasty Arachnotron/Hell Knight ambush greets me as I continue along the catwalk and I switch from my plasma rifle to conserve ammo back to my missile launcher in the hopes of knocking enemies into the lava and gibbing corpses. (I could use the BFG here, but there's loot in all four corners and I don't want to risk destroying it.)
+
+The Arch-Vile is hiding behind them with a Baron of Hell escort. Once they're all dead, I get a message:
+
+[quote . Suddenly everything is peaceful. Rest in peace, damned souls... A presence! Of something holy! Here in this hell?]
+
+That was only five Arch-Viles, by my count, so the sixth one must have been standing just out of view during the earlier BFG-and-missiles party.
+
+[ss 90508]
+
+Heading back to the center of the level reveals the "something holy": the Angelic Armour! It has stats identical to the Gothic Armour -- 50% resist physical and 7 protection -- but without the massive movespeed penalty, and if you're wielding the Spear at the same time, even in your off hand, it goes up to 11 instead.
+
+Sadly, it's...not actually all that great. 11 protection is impressive, but the lack of resistance to fire, plasma, or acid -- i.e. the most dangerous damage types and the ones you'll be encountering the most in Hell -- limits its usefulness, and the fact that it can be damaged and eventually destroyed limits it further. And as an Artifact -- basically a Unique, except not randomly generated -- it can't be modified, although it can be repaired using armour shards.
+
+Apart from that I find lots of medpacks, armour shards, and supercharge globes, a few modpacks and suits of red armour, an Assault Shotgun (basically a weaker Tactical Shotgun with a bigger clip)...and the Nuclear BFG. [emote getin]
+
+It can only be fired once before needing to recharge, and it's actually a bit weaker than the normal BFG, but it's still [b a fully moddable infinite ammo BFG].
+
+I grab it and spend a moment attaching bulk and power packs to my rifle, turning into a High Power Nuclear Plasma Rifle. This reduces the capacity but increases damage from 1d7 to 1d9, and with Ammochain that still gives me 16 8-shot bursts before I need to reload.
+
+[ss 90804]
+
+Hell 5 starts off [i fun]. A Revenant right next to me, a shitload of formers behind it, and extra barrels.
+
+Fortunately, as always, I get four free turns before any enemy can act.
+
+[ss 91090]
+
+That proves to be ample.
+
+[ss 92722]
+
+Everything goes well right up until the end, where I open fire on a caco in a doorway and one of the shots misses and hits a barrel. The ensuing chain reaction takes off 40% of my health in one go, but thankfully I escape being dunked in either acid or lava, and at least the archvile and other four cacodemons inside that room (!) suffer even more.
+
+[ss 94166]
+
+Hell 6 uses what I've come to think of as the "normal" level generation algorithm of many directly connected rooms. I enter it invulnerable, but it wears off before I can find any enemies.
+
+At this point we've seen every enemy, weapon, and powerup that's likely to appear; the only noteworthy part of this level is that I spend for-fucking-ever looking for the last enemy, and once I kill it I level up! Finesse gets another rank and I head down to the final secret level, Mt. Erebus.
+
+[ss 97820]
+
+Which consists entirely of lava.
+
+There are two versions of this level, Mt. Erebus and the Lava Pits. Both absolutely require lava immunity to navigate, although the Pits are the worse of the two, consisting of many small islands separated by lava. This is why I've been hanging on to those envirosuit packs I picked up way back at the end of episode 1.
+
+[ss 101303]
+
+In contrast, Erebus isn't so bad. Pull on an envirosuit and dash across the level to that tiny island in the middle and you can pull a lever that raises a bridge connecting to the main island. You can even do it with boots that have high fire resistance in a pinch.
+
+[ss 101365]
+
+The east side of the level holds two levers that open the central room -- the first one you pull opens the outer wall and reveals some mancubi and another, smaller room, and the second opens that room to reveal more mancubi.
+
+[ss 102965]
+
+Killing all of them summons the Lava Elemental.
+
+[quote . Big ball of fire...]
+
+This guy is, honestly, a joke. It doesn't hit that hard, and if you've made it this far you probably have fire resistance or a spare envirosuit or both. It can teleport and its ranged attacks can spawn lava, but it also spawns right next to you and probably won't survive long enough to do either.
+
+[ss 103077]
+
+I can only assume that "tough son of a bitch" was sarcastic, since it died in three attacks without even getting to act.
+
+It leaves behind the Lava Element, a one-of-a-kind consumable item that grants ten turns of invulnerability. Invulnerability globes are better, of course, but what makes the Element so valuable is that you can pick it up and carry it until it's needed.
+
+Apart from that, the haul from Erebus is disappointing. Some basic armour, some ammo, and seven pairs of boots. Apparently it's Hell's shoe closet.
+
+[ss 103665]
+
+Hell 7 is kind of hard to get excited about, since the final boss is just a staircase away. This group of enemies jerks me out of my complacency fast, though; I don't get any credit for [i almost] making it to the final boss.
+
+(Ok, I do, since there's a score system. But you get the idea.)
+
+[ss 103785]
+
+The fight opens with me going for my nuclear BFG and the Arch-Vile going for its pyrokinesis. We both draw at once, but the Arch-Vile gets the worst of it: both Mancubi are dead and it's been blasted [i closer] to me, and its flame attack, while not doing much damage once resistances and protection take their toll, has caused me to go berserk.
+
+[ss 105516]
+
+The Arch-Vile dies to a single spear thrust. Another one off-screen starts raising enemies, so I switch to the missile launcher and put an end to that nonsense. One room later the level is cleared of enemies with most of it still unexplored. I also gain one last level; Finesse is maxed out, so it goes into Son of a Bitch again.
+
+[ss 105895]
+
+And here I find something beautiful: an invincibility globe next to the stairs to the final boss.
+
+I decide to meet it in style and don the Angelic Armour. Taking up the Spear of Destiny and the Trigun, I descend to meet it in honourable combat.
+
+[ss 106347]
+
+Of course, by "honourable combat", I mean "nuclear fire".
+
+See, there are two ways of defeating the final boss. The normal way is to shoot it in the face until it dies. This gets you a "standard win".
+
+The exciting way is to set off a nuclear device. Either of the nuclear energy weapons in my backpack will do, as will the Nuclear Bomb (a consumable item that didn't show up at all on this playthrough for some reason). But a better option than any of these is the Trigun, which has an alternate fire mode that nukes the level [i instantly].
+
+Of course, it drains your max HP every time you use it, and if you aren't invincible, kills you along with everything else, but I don't need HP for much longer and, happily, I [i am] invincible.
+
+[ss 106414]
+
+Everything is white because I'm invincible and just set off a nuke, but that shockwave is the boss exploding.
+
+(If you're sad at missing out on a cool final bossfight, don't be. The final boss is basically just a huge Arachnotron.)
+
+Nuking the final boss and dying still counts as a "partial win". But if you set off a nuke and [i survive], well...
+
+[quote . Congratulations! You defeated the Spider Mastermind!
+
+You ingenious son of a gun! You're as smart as Hell itself! But... something's wrong! You sense a menace, a threat so evil it kills your mind! Was not all evil destroyed?]
+
+[ss 106496]
+
+Nuking the Mastermind and surviving reveals one final set of stairs. Normally I would have used the Lava Element for this. This, I believe, is its main purpose: it's a guaranteed carryable invincibility that lasts just long enough to set off a nuke. You still need the nuke to go with it, but it's rare to have a game where no nukes [i and] no nuclear energy weapons spawn.
+
+[ss 106499]
+
+Descending the stairs leads me to the true final boss: [spoiler John Carmack]. There are no tricks and no cover here; just a huge arena containing an enemy who wields a rocket launcher just as skillfully as I do and can summon the denizens of Hell to assist him.
+
+[ss 106534]
+
+At least, that's how it's [i meant] to play out, since it's almost impossible to arrange things so that you're still invincible and have a nuke and enough time to set it off when you enter this level. But it turns out that almost impossible is the same thing as just barely possible.
+
+[quote . [spoiler John Carmack] is dead.
+
+No more evil will ever fall upon this world. Your damned soul rests, knowing that no more hellish forces will threaten Earth.
+
+Or will they?
+
+This will be revealed in...
+
+DoomRL II: Hell on Earth!]
+
+(No, there's no DoomRL II. I'm not sure if one was planned at one point or if it's just riffing on the ending of Doom here.)
+
+The game, win or lose, ends with a postmortem. I've trimmed out some of the more boring bits. The main points of interest are kill rate, score, and awards (which I'll be explaining in a future update as prep for the challenge modes), but it also includes things like your last few log messages, a complete list of kills, and a screenshot of the level you died or won on.
+
+One feature I particularly like is the character history, a summary of all the important events that happened. This includes assemblies built, uniques found, and secret levels visited and completed. It's something I wish more roguelikes would do.
+
+[code
+
+--------------------------------------------------------------
+ DoomRL (0.9.9.7) roguelike post-mortem character dump
+--------------------------------------------------------------
+
+ ToxicFrog, level 14 Hell Baron 2nd Lieutenant Marine,
+ nuked the Mastermind at the Hell Fortress.
+ He survived 149769 turns and scored 151054 points.
+ He played for 19 hours, 24 minutes and 15 seconds.
+ He didn't like it too rough.
+
+ He killed 785 out of 785 hellspawn. (100%)
+ This ass-kicking marine killed all of them!
+
+ He saved himself 4 times.
+
+-- Awards ----------------------------------------------------
+
+  Medal of Prejudice
+  UAC Star (gold cluster)
+  Aurora Medallion
+  Conqueror Badge
+  Grim Reaper's Badge
+  Hell Armorer Badge
+  Hell Champion Medal
+
+-- Equipment -------------------------------------------------
+
+    [\a] [\ Armor      ]   Angelic Armor [\11/11] (100%)
+    [\b] [\ Weapon     ]   Trigun (3d6) [\6/6]
+    [\c] [\ Boots      ]   tactical boots [\0/0] (100%)
+    [\d] [\ Prepared   ]   Longinus Spear (8d8)
+
+-- Inventory -------------------------------------------------
+
+    [\a] missile launcher (6d6) [\4/4] (T1)
+    [\b] high power nuclear plasma rifle (1d9)x6 [\16/16]
+    [\c] nuclear BFG 9000 (9d6) [\1/40] (P1)
+    [\d] BFG 9000 (10d6) [\130/130] (B1)
+    [\e] powered red armor [\5/5] (100%)
+
+-- History ---------------------------------------------------
+
+  He started his journey on the surface of Phobos.
+  On level 2 he entered Hell's Arena.
+  He left the Arena as a champion!
+  On level 5 he stormed the Chained Court.
+  On level 5 he found the Arena Master's Staff!
+  He defeated the Hell Arena Master!
+  On level 7 he assembled a piercing blade!
+  On level 7 he marched into the Military Base.
+  On level 7 he assembled a tactical boots!
+  He purified his fellow comrades.
+  On level 8 he encountered the Phobos Anomaly.
+  On level 9 he entered Hell's Armory.
+  On level 9 he assembled a tactical shotgun!
+  On level 9 he assembled a power armor!
+  He destroyed the evil within and reaped the rewards!
+  On level 11 he witnessed the Wall.
+  He massacred the evil behind the Wall!
+  On level 12 he romped upon the Abyssal Plains.
+  He slaughtered the beasts living there.
+  On level 14 he assembled a gatling gun!
+  On level 14 he ventured into the Halls of Carnage.
+  On level 16 he found the Tower of Babel!
+  Level 17 was a hard nut to crack!
+  On level 17 he invaded the Unholy Cathedral!
+  On level 17 he found the Longinus Spear!
+  He then destroyed the Unholy Cathedral!
+  Level 18 blasted him with an unholy atmosphere!
+  On level 19 he entered the Vaults.
+  On level 19 he found the Trigun!
+  He cracked the Vaults and cleared them out!
+  On level 20 he was foolish enough to enter Limbo!
+  On level 20 he found the Angelic Armor!
+  On level 20 he assembled a high power weapon!
+  He managed to clear Limbo from evil!
+  On level 22 he arrived at Mt. Erebus.
+  He managed to raise Mt. Erebus completely!
+  Then at last he found Dis!
+  He activated the Angel Arm on level 24!
+  He defeated the Mastermind and found the TRUE EVIL!
+  He activated the Angel Arm on level 25!
+  Then finally in Hell itself, he killed the final EVIL.
+]
+
+And that's it for my standard playthrough of DoomRL! [emote toot] Nuking [i both] final bosses was definitely not something I had planned, and I doubt I'll ever be able to do it again.
+
+Next time: I die and die and die and die in the DoomRL challenge modes.

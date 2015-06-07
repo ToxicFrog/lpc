@@ -1,6 +1,8 @@
 LPC, the Let's Play Compiler.
 
-This project is still very much a work in progress, but you might be interested in the ttysnap tool, which works pretty well.
+Documentation is TBW, but see the files in "test" for an example of usage.
+
+To use ttysnap, try `ttysnap --help` for command line help or the `help` command once it starts up.
 
 ## License
 

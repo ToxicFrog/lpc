@@ -1,0 +1,256 @@
+[use ttysnap
+  file=../145.ttyrec
+  prefix=ss/
+  term_size=80x25
+  palette=3=orange,9=#FF0000]
+[defalias ss ttysnap]
+
+[image http://lpix.org/2063114/19.png]
+
+[b DoomRL, Episode 2: The Shores of Hell]
+
+[ss 25510]
+
+Immediately after defeating the Bruiser Brothers, we're dropped into Deimos. This introduces yet another level layout: caves! These consist of a large central chamber with side passages branching off from it, pools of acid and lava, and often (as in this case) isolated buildings.
+
+[ss 25958]
+
+[quote . These are hell's warlords. They command hellish armies to battle. Not as tough as Barons but still a pain in the ass...]
+
+Our first new enemy of the episode, the Hell Knight. They're durable and have an exploding plasma attack, but with a bit of cover the combat shotgun makes short work of them.
+
+[ss 27014]
+
+After clearing out the level, I grab a Supercharge and an Invulnerability Globe from near where I spawned to give me a bit of an edge on the next level. The Invulnerability Globe gives me 50 seconds -- 75 seconds, with the Marine's +50% powerup duration -- of complete immunity to all forms of damage, although weirdly you still scream when wading through lava.
+
+Now fully powered up, I dash across the level and down the red stairs to Hell's Armoury.
+
+[ss 27769]
+
+The Armoury consists of two small islands in a lava sea, connected by a narrow bridge and featuring buildings filled with weapons and ammo -- and enemies. As we approach the second island, we see another new foe, the Arachnotron.
+
+[quote . Evil can't get much purer. Spiderdemons equipped with a rapid-fire plasma cannon. Machine and flesh combined, kill on sight...]
+
+These guys are seriously nasty; even our red armour barely counts for anything against plasma damage, and they move fast and fire five shots per burst. And since it's a rapid-fire weapon, you can't reliably dodge it, either.
+
+A few Arachnotrons later, I level up.
+
+[ss 27918]
+
+And here we see why I've been picking the traits I have: to unlock this Master Trait. With Ammochain, firing a burst-fire weapon like the chaingun, no matter how many bullets actually come out of it, only costs one round. I can fire the chaingun 40 times, for a total of 240 bullets, before reloading.
+
+Ammochain is generally considered a kind of boring, one-trick-pony sort of build, and it kind of is, but it's a [i really good] trick.
+
+[ss 29407]
+
+After clearing out the enemies, I grab a Technical Pack from one of the buildings and upgrade my Combat Shotgun to a Tactical Shotgun. The stats are the same, but where the Combat Shotgun requires you to either take a step or spend a fraction of a second chambering another shell between shots, the Tactical variant can be fired with no delay between shots.
+
+The level is now supposedly empty of enemies, but not yet complete. The only thing left is to pull the lever.
+
+[ss 29440]
+
+...and defeat the boss that it summons.
+
+[quote . Even other monsters fear him, so expect a clobbering. He shrugs off explosions. Good luck.]
+
+The Shambler is a lightning-throwing friend from Quake. It can teleport and regenerates health, but it could be worse; instead of this level you sometimes get the Deimos Lab, which has two of them!
+
+Its melee attack and its ranged attack are both nasty, so your best bet is to hunker down someplace that gives you good odds of being able to corner-shoot it, let it come to you, and wait out the occasional teleport.
+
+[ss 30096]
+
+I unload on it with Chain Fire. This is an alternate-fire mode that most burst-fire weapons have, letting it fire 1.5x the normal number of shots per turn after a two-turn warmup period. For me, this means 9 shots per turn, which is considerable...and it still only costs 1 bullet per turn.
+
+[ss 30471]
+
+Eventually the Shambler dies and grants access to the lab cache. This contains three random modpacks, but has a higher than normal chance of generating rare modpacks, and in this case it has done so; I pick up a Nano Pack. This gives armour regenerating durability, and weapons regenerating ammo, and is also a key component in a number of excellent Assemblies.
+
+I promptly run back to grab my red armour -- I swapped it out for blue earlier in the level, worrying that it would be destroyed in the bossfight -- and slap the nano pack onto it, turning it into Powered Red Armour. It loses one point of protection compared to just putting a power mod on it, but it gains regenerating durability and increased resistances, and loses its movement speed penalty. This is definitely a worthwhile tradeoff.
+
+I spend a little while longer looting the level. The Bulk Pack (increases armour durability, or weapon ammo supply) goes on the chaingun, not that I really need the increased capacity. I also pick up a few 10mm ammo chains; these contain dramatically more ammo than you can normally hold in a single inventory slot, and if equipped in your offhand let you reload your mainhand weapon much faster, but can't be refilled as they empty.
+
+[ss 35832]
+
+Deimos 2 yields up a bunch of targets for my minigun and berserk, supercharge, and invulnerability globes near the stairs, so I enter Deimos 3 as an avatar of destruction.
+
+[ss 38379]
+
+Deimos 3 is more filler, but contains the stairs to The Wall, our next secret level.
+
+[ss 38878]
+
+The Wall is mostly empty space, and all of the interesting parts are sealed away behind a thick wall of stone. Characters who don't bring a rocket launcher can't do much here.
+
+[ss 38947]
+
+Cracking open the wall reveals a new enemy!
+
+[quote . Huge, almost humanoid, acid ball hurling monsters from your worst nightmares. They are the nobility of hell.]
+
+The area behind the wall is stuffed with these guys and Hell Knights, and there's no cover except the edge of the hole I just blew in the wall itself. I repeatedly step out of cover in the hopes of luring a few more over before retreating back to cover.
+
+Eventually I just charge in to finish off the last few, and while it costs me a medkit, I manage it in the end and even score a level-up.
+
+[quote Brute "There's nothing wrong that I can't fix... with my hands!"
+
+You don't need a gun - guns are for wusses! With each level of this trait you'll deal 3 more damage while bashing your enemies with your hands, knives, body parts, or whatever else is available. Also your melee accuracy increases by 2.]
+
+This may seem like an odd choice compared to traits that will make my chaingun even better, but there is a method to my madness. When the time comes, this will ensure that I can use my chainsaw effectively.
+
+[ss 42671]
+
+The slaughter reveals this treasure room. More rockets than I'll ever need, plus a Special gun and a unique, orange-coloured powerup.
+
+The gun is the Missile Launcher, a replacement for our rocket launcher. Its shots have a smaller blast radius but much higher accuracy, and it can hold 4 rockets at once! It also fires and reloads faster. You can't rocket jump with it, but that's a small sacrifice to make. Even better, it still counts as a rocket launcher for the purposes of modification and assemblies.
+
+The powerup is the Backpack, which increases your ammo carrying capacity.
+
+[ss 42791]
+
+I haven't really talked much about inventory. You have 22 slots (plus four equipment slots -- armour, boots, main weapon, and secondary weapon), each one of which can hold a consumable or piece of equipment or a stack of ammo. Unlike Doom proper, this means you can dramatically increase your ammo carrying capacity by ditching other sorts of ammo (or other items).
+
+Normally this maxes out at 100 10mm rounds, 50 shotgun shells or power cells, or 10 rockets per stack. The Backpack, though, gives you +40% to ammo stack size, dramatically increasing how much you can haul around.
+
+[ss 43048]
+
+Another level type! "Twisted passages" caves are smaller than normal cave levels, contain no buildings, and are populated entirely by a single type of enemy. In this case we can see a Cacodemon, and thus know that all the enemies on the level will be cacos. There's also another red staircase here.
+
+To the lower right are two items I haven't discussed yet. The yellow one is an Armour Shard, which repairs your armour and boots when picked up. Since both of mine regenerate durability, it's not much use.
+
+The [tt +] is a Blood Skull, which consumes all corpses around the player and gives you 5 hitpoints for each one. It's supposedly great against archviles, since it prevents them from raising the corpses next to you, but in practice I never remember to use these things even when I pick them up.
+
+The rest of the level is over fast. I'm using the shotgun less and the minigun more, now that I don't need to worry about chewing through ammo so quickly. I also find a Light-Amp Goggles powerup, which temporarily increases my vision range, but only after killing everything on the level.
+
+[ss 44886]
+
+The Abyssal Plains are another paired level; you get either this or the City of Skulls. It's at this point I realize I've run out of loose 10mm ammo and decide to disassemble one of my ammo chains.
+
+(There are two ways you can use ammo packs. Equipping them in your offhand lets you reload your mainhand weapon with them almost instantly, but means you can't quickly switch weapons -- equipping from your inventory is slightly slower than swapping hands. Alternately, you can drop them and extract loose ammo from them into your inventory.)
+
+[ss 49911]
+
+The outer parts of the Plains consist of healing items, ammo and ammo packs, a few basic weapons, and another missile launcher, liberally sprinkled with imps, cacos, and hell knights. The central room contains the stairs down.
+
+[ss 49937]
+
+But when you step inside, this happens. Walls spring up around you and you're locked in with a swarm of Lost Souls, a few Pain Elementals, and the Agony Elemental.
+
+[quote . Pain, pain, pain - this is the only thing these monsters live by, and the only thing they deliver. Wait, look again - they also deliver lost souls!]
+
+Pain elementals have no ranged attacks, but constantly spawn lost souls. The Agony Elemental is much more durable and heavily armoured version that spawns both lost souls [i and] more Pain Elementals.
+
+[ss 49961]
+
+The good news is that I still have my shotgun.
+
+With a shotgun this is generally a safe but boring fight. The fact that it hits all targets in a cone means that the lost souls die as soon as they spawn without limiting your ability to keep up the damage on the elementals. The souls don't last long enough to get close, and the elementals don't [i want] to get close.
+
+Many shotgun shells later, I kill everything and claim my prize: three Fire Skulls. These are similar to the blood skull, but cause the affected corpses to explode and damage nearby enemies rather than healing you.
+
+[ss 50739]
+
+A quick look at my stats halfway through the game. The effect of Reloader is evident, and the increased movespeed comes from the tactical boots (without being negated by the red armour, since the power-armour assembly removes the movement speed penalty). That 108-kill killing spree comes entirely from the Agony Elemental fight; spawned enemies don't give you XP but do count as kills otherwise.
+
+[ss 53919]
+
+Deimos 5. Arachnotrons and Barons of Hell are starting to show up as normal enemy spawns now, along with this guy: the former commando.
+
+[quote . These guys were evil to begin with. Being warped by hell's power has only made them worse. Wielding a deadly plasma weapon they should be treated with care... and lead.]
+
+They wield plasma rifles, (1d7)x6 plasma weapons. That's considerably nastier than what Arachnotrons can bring to the table, but the good news is that you get to keep their gun after killing them.
+
+[ss 54478]
+
+Many bullets later, it finally dies and I grab its plasma rifle. This level also yields yet another fire skull and a third missile launcher. [emote psyduck] It's a good weapon but you don't really need more than one!
+
+The plasma rifle is a delightful weapon. It fires more shots than the chaingun, and those shots do more damage; furthermore, as a plasma weapon, enemy armour is halved, and few things resist it. The only reason it doesn't immediately and permanently render the chaingun obsolete is that it is hungry for the relatively rare energy cells as ammo, but having Ammochain mitigates that.
+
+With all my bonuses, it does a shocking (1d7+2)x8 damage if all shots hit.
+
+[ss 55993]
+
+I put an agility mod on the plasma rifle for increased accuracy, grab an invincibility pack, and head downstairs. I spawn in sight of a Baron of Hell, but being invincible I can simply begin the level with overwhelming force rather than trying to take cover. Three bursts do for it.
+
+Just around the corner I find a second bulk pack and put it on my chaingun, turning it into the Gatling Gun -- (1d7)x6 damage, same as the plasma rifle. Normally this is a pretty early upgrade, but in this game bulk packs have been so rare that I got it just in time for it to be obsolete.
+
+[ss 57143]
+
+Deimos 6 also introduces a new and extremely nasty enemy: the Revenant.
+
+[quote . Apparently when a demon dies, they pick him up, dust him off, wire him some combat gear, and send him back into battle. No rest for the wicked, eh? You wish your missiles did what his can do.]
+
+Bullet and fire resistant and armed with [i homing missiles], Revenants have ended an embarassingly large number of my runs when I forget that you can't dodge their attacks. I mean, you technically can, but since their missiles always explode at exactly the point they targeted, this doesn't mean they [i miss] -- they just explode next to you for nearly-full damage anyways. In this case I got lucky and the missile clipped a crate in front of me and exploded early.
+
+[ss 57169]
+
+Rather than attack the Revenant directly -- the gatling gun wouldn't do much damage anyways, with the bullet resistance -- I attack the barrel next to it. Napalm barrels explode like the orange fuel barrels from earlier levels, but also leave lava behind. If I can catch the Revenant in a lava pool, that will do a lot of damage even with its resistance, and if not, the blast should fling it backwards and keep it from retaliating.
+
+[ss 57250]
+
+Sadly, the Revenant is still alive; if not I would have "heard the scream of a freed soul" even if the blast knocked it out of view. I take cover and wait for it to come to me, then finish it off -- it was, at least, badly injured in the blast.
+
+The revenant and another former commando mark the last serious resistance on the level. I empty the commando's plasma rifle of energy cells, grab a berserk pack and head down the red stairs to the Halls of Carnage.
+
+[ss 58894]
+
+You start out in a small room to the southwest, and as soon as you enter the level "you feel the need to run!" The reason for this isn't immediately apparent, but as you enter the level proper, it starts to flood with lava starting from the west.
+
+[ss 61686]
+
+The west half of the level is a maze populated by various types of former. I dash through it killing everything in my way, but don't bother trying to seek out every evemy -- the lava will take care of them for me. There's a guaranteed modpack to the north, which I grab; it's a technical pack and goes on the missile launcher to increase rate of fire.
+
+The east half is separated from the rest by this lava moat, but unless you're badly injured already it's not worth using an envirosuit to cross it; just start running, dash across to the middle, grab the large health globe, and run again to get to the other side.
+
+[ss 63746]
+
+The second half of the level consists of concentric rings separated by locked doors (meaning you must spend precious turns shooting them open). There's also some ammo and a bulk pack.
+
+[ss 63817]
+
+The true reward lies at the center, though: the BFG 9000! [emote hellyeah] Like the Chainsaw, it's automatically equipped when picked up, although you don't get a berserk effect. It also holds a whopping [b 100] energy cells, more than you can carry in an inventory stack even with the backpack, so even if you have no intention of ever using it, it's worth picking up just to increase your ammo capacity!
+
+I immediately stick the bulk pack to it to increase that to 130, letting it fire three times without reloading (it costs 40 cells per shot).
+
+[ss 64127]
+
+I then wait on the stairs (which are the one thing that will not be destroyed by the lava) until the level has flooded and all enemies are dead.
+
+[ss 64152]
+
+Deimos 7 produces a new level feeling. "That gasoline smell" means that there is a lever somewhere that floods the entire level with lava [i instantly]. If you're immune to lava this can actually be kind of useful in emergencies, but it will destroy every item on the level and if you [i aren't] immune to lava it will destroy you, too.
+
+Thankfully, enemies can't pull levers.
+
+[ss 66016]
+
+Apart from the dwarven doomsday device, the only poin of interest on this level is the Special armour in this room, the Gothic Armour. It makes you nearly immune to knockback and comes with 50% bullet, shrapnel, and melee resistance, plus a protection of [b 7] -- but also reduces your movement speed by 70% when worn. If paired with the Gothic Boots, its stats increase even more but you become completely immobile until you remove either the boots or armour.
+
+This armour is actually a great candidate for PN mods, making it power armour; as a Special, it is still fully moddable, and doing this will give it 8 protection and crank the resistances up to 95% while also removing the movespeed penalty! However, Nano packs are extremely rare; I'm unlikely to find a second one, and thus I reluctantly leave the armour here.
+
+[ss 67858]
+
+Going down takes us to the Tower of Babel, the final boss arena of episode 2.
+
+[ss 67962]
+
+Say hello to the Cyberdemon.
+
+[quote . Monster and machine, combined. Equipped with a rocket launcher, this nightmare is the worst thing you can find in Hell. Or at least that is what you hope...]
+
+The rocket launcher actually has the same stats as your own, which means that -- unlike, say, a Revenant's -- it can be dodged and has to be reloaded between shots. So this fight falls into a natural rhythm: dodge a rocket, shoot until you see it reload the rocket launcher, dodge again.
+
+[ss 68272]
+
+A character with Dodgemaster can easily complete this fight without taking damage, but I've invested no levels in dodging ability, and even with running I take several rockets to the face. This turns it more into a war of attrition, but I have power armour and half a dozen large medkits.
+
+[ss 69822]
+
+Once the Cyberdemon goes down, it drops a pile of rockets, but I get no chance to pick them up -- as soon as it dies I'm whisked off to Episode 3.
+
+[quote . You've done it! The hideous Cyberdemon lord that ruled the lost Deimos moon base has been slain and you are triumphant! But ... where are you? You clamber to the edge of the moon and look down to see the awful truth.
+
+Deimos floats above Hell itself! You've never heard of anyone escaping from Hell, but you'll make the bastards sorry they ever heard of you! Quickly, you rappel down to the surface of Hell.
+
+Now, it's on to the final chapter of DoomRL -- Inferno!]
+
+See you there. [emote devil]
