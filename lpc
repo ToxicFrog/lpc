@@ -24,12 +24,23 @@ flags.register ("cache") {
   default = "./.lpc-cache";
 }
 
+flags.register ("help", "h", "?") {
+  help = "This text.";
+}
+
 lp = {}
 
 require "macros"
 require "packages"
 
 flags.parse(...)
+
+if flags.parsed.help then
+  print("Usage: lpc [options] input.file")
+  print("Options:")
+  print(flags.help())
+  os.exit(0)
+end
 
 lp.cache = require('cache').open(flags.parsed.cache)
 
