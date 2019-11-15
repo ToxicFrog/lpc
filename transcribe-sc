@@ -1,0 +1,31 @@
+#!/bin/bash
+# :mode=bash:
+
+function imagegrep() {
+    local basis="$1"
+    local orig="$2"
+    composite -compose darken "$orig" <(convert -level 0,1 "$basis" bmp:-) bmp:- \
+        | compare bmp:- "$basis" -metric AE bmp:/dev/null 2>&1 \
+        | egrep -q '^0$' && return 0
+    return 1
+}
+
+function hasface() {
+    imagegrep "faces/basis_$1.png" "$2" && return 0 || return 1
+}
+
+function ocr() {
+    gocr -d 0 -a 99 -f ASCII -m $((256+128+2)) -p ocr/ \
+        -i <(convert -crop 640x96+0+384 -negate -level 60%,61% $ss pnm:-) \
+        | lua -e 'buf = io.read "*a"; print(( buf:gsub("\n", " ") ))' \
+        | tee -a latest/dialogue.txt
+}
+
+> latest/dialogue.txt
+for ss in latest/raw/*.png; do
+    if hasface l $ss || hasface r $ss; then
+        ocr $ss
+    fi
+done
+
+sed -r -e 's_^([^:]+) *: *'"''"'_\1\t[[_g' -e 's_'"''"' *$_]]_g' < latest/dialogue.txt >> latest/post.lua

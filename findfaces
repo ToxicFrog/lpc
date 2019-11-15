@@ -1,0 +1,4 @@
+for face in "$@"; do
+	cp `tools/findface $face.jpeg` latest/faces/
+done
+

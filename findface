@@ -1,0 +1,11 @@
+#!/bin/bash
+
+i=0;
+found=""
+while [[ -d `printf %03d $i` ]]; do
+    [[ -f `printf %03d $i`/faces/$1 ]] && found=`printf %03d $i`/faces/$1
+	((++i))
+done
+
+echo $found
+
