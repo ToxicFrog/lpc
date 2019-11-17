@@ -1,93 +1,140 @@
 #!/bin/bash
 # :mode=bash:
 
-function placeholder {
-# extract dialog text from bottom
-convert -crop 480x102+4+278 -threshold 90% -negate 604-capture_604_19_132205-crop.png test.png
-# extract nameplate
-convert -crop 88x20+4+254 -threshold 90% -negate  604-capture_604_19_132205-crop.png test.png
-# top dialog
-convert -crop 490x102+4+4 -threshold 90% -negate 176-capture_176_19_125554-crop.png test.png
-# top nameplate
-convert -crop 88x20+4+110 -threshold 90% -negate 176-capture_176_19_125554-crop.png test.png
+# missing: 171, 172, 183, 199
+
+# Configurable bits
+
+# Called to read the text out of an image.
+function READ {
+  # if detect NAMEPLATE_TOP.png 0 "-crop 4x28+0+104 -channel all -normalize -threshold 50%"; then
+  #   ocr nameplate -crop 88x20+4+110 -intensity Rec709Luma -threshold 90% -negate
+  #   ocr text -crop 464x102+16+4 -intensity Brightness -threshold 90% -negate
+  #   output
+  # fi
+
+  # Text at top
+  if-detected NAMEPLATE_TOP.png "-crop 4x28+0+104 -channel all -normalize -colorspace Gray -threshold 40%" 4 \
+    nameplate "-crop 88x20+4+110 -intensity Rec709Luma -threshold 90% -negate" \
+    text "-crop 464x102+16+4 -intensity Brightness -threshold 90% -negate"
+
+  # Text at bottom
+  if-detected NAMEPLATE_BOTTOM.png "-crop 4x28+0+252 -channel all -normalize -colorspace Gray -threshold 40%" 4 \
+    nameplate "-crop 88x20+4+254 -intensity Rec709Luma -threshold 90% -negate" \
+    text "-crop 464x102+16+278 -intensity Brightness -threshold 90% -negate"
+
+  # Text at bottom displaced by window telling you to use the touchscreen,
+  # e.g. capture_632_19_132451.png
+  if-detected NAMEPLATE_BOTTOM.png "-crop 4x28+0+204 -channel all -normalize -colorspace Gray -threshold 40%" 4 \
+    nameplate "-crop 88x20+4+206 -intensity Rec709Luma -threshold 90% -negate" \
+    text "-crop 464x102+16+230 -intensity Brightness -threshold 90% -negate"
+
+
 }
 
-# set -e
+# Called to postprocess the text before writing it out.
+function POST/nameplate {
+  # Remove leading and trailing whitespace, and collapse '?? ' into '? ' since
+  # a pecularity of OCRing '? ? ?' in the nameplate causes it to render as
+  # '?? ?? ?? ' instead.
+  sed -E 's/\?\? /\? /g; s/^ +//; s/ +$//'
+}
+
+function POST/text {
+  tr '\n' ' ' \
+    | sed -E "
+      # Replace things like I,m and it,s with I'm and it's, since the OCR has
+      # trouble distinguishing between ' and ,
+      s/([A-Za-z]),([A-Za-z])/\\1'\\2/g
+
+      # It tends to read '...' as '. . . ', so fix that
+      s/\\. \\. \\. /.../g
+
+      # Trim whitespace before closing paren.
+      s/ +\)/)/g
+
+      # Remove leading and trailing whitespace
+      s/^ +//; s/ +$//
+    "
+}
+
+# Called to write the text out to the transcription file.
+function WRITE {
+  echo "# $IMAGE"
+  echo "[$(get nameplate)] $(get text)"
+  echo ""
+}
+
+#### No user serviceable parts below this line. ####
+
 shopt -s lastpipe
 
-# position of detection slice; position of nameplate; position of main text
-POSITIONS='
-6x24+0+108 88x20+4+110 460x102+16+4
-6x24+0+252 88x20+4+254 460x102+16+278
-'
+# if-detected <im args for detection> <template image> <maximum diff> \
+#   <key> <im args for key> \
+#   <key> <im args for key> \
+#   ...
+# Upvalues: IMAGE, the image being read; TRANSCRIPT, the file being written.
+function if-detected {
+  local pattern="$1"
+  local args="$2"
+  local maxdiff="$3"
+  shift 3
 
-function detect {
-  echo "$POSITIONS" | egrep . | while read rect pos; do
-    diff="$(
-      compare \
-        <(convert -crop $rect -threshold 50% "$1" bmp:-) \
-        NAMEPLATE_PATTERN2.png \
-        -metric AE bmp:/dev/null 2>&1)"
-    if ((diff <= 4)); then
-      echo "$pos"
-      return
-    fi
+  local diff=$(diff-images "$IMAGE" "$pattern" "$args")
+  if (( diff > maxdiff )); then return; fi
+
+  local -A OCR=()
+  while [[ $1 ]]; do
+    local key="$1"
+    local args="$2"
+    shift 2
+
+    OCR[$key]="$(ocr "$key" "$IMAGE" "$args" | POST/$key)"
   done
+  WRITE >> "$TRANSCRIPT"
 }
 
-# ocr <database name> <image> <coordinates>
+# diff-images basis template im-args
+function diff-images {
+  compare <(convert $3 "$1" bmp:-) "$2" \
+    -metric AE bmp:/dev/null 2>&1
+}
+
+# ocr <database name> <image> <convert arguments>
 function ocr {
-  gocr -p $1.ocr/ -m $((256+128+2)) -d 0 -a 100 -f ASCII \
-    -i <(convert -crop $3 -intensity Brightness -threshold 90% -negate $2 pnm:-) \
-    -o /tmp/$$ 2>&1 | sed -E '/^#/ d; y/,O#./░▒█ /; s/([a-z])  /\1. /g;' >&2
-  cat /tmp/$$ \
-  | tr '\n' ' ' \
-  | sed -E "
-    s/([a-z]),([a-z])/\\1'\\2/g
-    s/\\. \\. \\. /.../g
-    s/^ +//; s/ +$//
-    s/\\?\\?/\\?/g
-  "
+  mkdir -p "$1.ocr"
+  cp "$2" test.png
+  convert $3 "$2" ocr.png
+
+  gocr -p "$1.ocr/" -m $((256+128+2)) -d 0 -a 99 -f ASCII \
+    -i <(convert $3 "$2" pnm:-) \
+    -o /tmp/$$ 2>&1 | sed -E '
+      s/^Press RET.*/\x1B[2J/
+      /^#/ d
+      y/,O#./░▒█ /
+      s/([a-z])  /\1. /g
+    ' >&2
+  cat /tmp/$$
 }
 
-mkdir -p nameplate.ocr text.ocr
-echo > out.txt
-for img in "$@"; do
-  detect "$img" | read nameplate text
-  if [[ $nameplate ]]; then
-    echo "# $img" >> out.txt
-    echo "[$(ocr nameplate $img $nameplate)] $(ocr text $img $text)" >> out.txt
-    echo >> out.txt
-  fi
-done
-cat out.txt
-exit 0
-
-# to detect nameplate
-# threshold 145
-# cut out 6x24+0+108 for top, +0+252 for bottom
-# diff against NAMEPLATE_PATTERN
-
-function imagegrep() {
-    local basis="$1"
-    local orig="$2"
-    # compose darken basically treats the basis as the alpha channel for the orig,
-    # so all that's left is the border around the portrait
-    # compare AE is Absolute Error Count, i.e. number of different pixels
-
-    composite -compose darken "$orig" <(convert -level 0,1 "$basis" bmp:-) bmp:- \
-        | compare bmp:- "$basis" -metric AE bmp:/dev/null 2>&1 \
-        | egrep -q '^0$' && return 0
-    return 1
+# get <key>
+# Get the text associated with a key in the current OCR context.
+# Upvalues: OCR, the key->text map.
+function get {
+  echo -n "${OCR[$1]}"
 }
 
-function hasface() {
-    imagegrep "faces/basis_$1.png" "$2" && return 0 || return 1
+function main {
+  local -r TRANSCRIPT="$1"; shift
+  echo > "$TRANSCRIPT"
+
+  local IMAGE
+  for IMAGE in $(printf '%s\n' "$@" | sort -g); do
+    echo "$IMAGE"
+    READ
+  done
+  cat "$TRANSCRIPT"
 }
 
-function ocr() {
-    gocr -d 0 -a 99 -f ASCII -m $((256+128+2)) -p ocr/ \
-        -i <(convert -crop 640x96+0+384 -negate -level 60%,61% $ss pnm:-) \
-        | lua -e 'buf = io.read "*a"; print(( buf:gsub("\n", " ") ))' \
-        | tee -a latest/dialogue.txt
-}
+main "$@"
+
