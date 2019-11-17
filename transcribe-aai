@@ -5,31 +5,45 @@
 
 # Configurable bits
 
+# detect image x y image x y image x y...
+function detect {
+  while [[ $1 ]]; do
+    local w=$(echo "$1" | tr -d B | wc -c)
+    if (( w > 2 )); then
+      local thresh=10%
+    else
+      local thresh=90%
+    fi
+    local diff=$(
+      diff-images "$IMAGE" "$BASEDIR/$1.png" \
+      -crop "4x4+$2+$3" -colorspace Gray -normalize -threshold $thresh)
+    (( diff > 0 )) && return 1
+    shift 3
+  done
+  return 0
+}
+
 # Called to read the text out of an image.
 function READ {
-  # if detect NAMEPLATE_TOP.png 0 "-crop 4x28+0+104 -channel all -normalize -threshold 50%"; then
-  #   ocr nameplate -crop 88x20+4+110 -intensity Rec709Luma -threshold 90% -negate
-  #   ocr text -crop 464x102+16+4 -intensity Brightness -threshold 90% -negate
-  #   output
-  # fi
+  # Text at top.
+  # Coordinates for text TL TR, nameplate TL TR BL.
+  if detect BBBW 0 0 BBWB 508 0 WBWW 0 106 WBWW 92 106 WWBW 0 130; then
+    ocr nameplate -crop 88x20+4+110 -intensity Rec709Luma -threshold 90% -negate
+    ocr text -crop 464x102+16+4 -intensity Brightness -threshold 90% -negate
+    output
+  fi
 
-  # Text at top
-  if-detected NAMEPLATE_TOP.png "-crop 4x28+0+104 -channel all -normalize -colorspace Gray -threshold 40%" 4 \
-    nameplate "-crop 88x20+4+110 -intensity Rec709Luma -threshold 90% -negate" \
-    text "-crop 464x102+16+4 -intensity Brightness -threshold 90% -negate"
+  if detect BWWW 0 250 WWWB 0 274 WWWB 92 274 BWBB 0 380 WBBB 508 380; then
+    ocr nameplate -crop 88x20+4+254 -intensity Rec709Luma -threshold 90% -negate
+    ocr text -crop 464x102+16+278 -intensity Brightness -threshold 90% -negate
+    output
+  fi
 
-  # Text at bottom
-  if-detected NAMEPLATE_BOTTOM.png "-crop 4x28+0+252 -channel all -normalize -colorspace Gray -threshold 40%" 4 \
-    nameplate "-crop 88x20+4+254 -intensity Rec709Luma -threshold 90% -negate" \
-    text "-crop 464x102+16+278 -intensity Brightness -threshold 90% -negate"
-
-  # Text at bottom displaced by window telling you to use the touchscreen,
-  # e.g. capture_632_19_132451.png
-  if-detected NAMEPLATE_BOTTOM.png "-crop 4x28+0+204 -channel all -normalize -colorspace Gray -threshold 40%" 4 \
-    nameplate "-crop 88x20+4+206 -intensity Rec709Luma -threshold 90% -negate" \
-    text "-crop 464x102+16+230 -intensity Brightness -threshold 90% -negate"
-
-
+  if detect BWWW 0 202 WWWB 0 226 WWWB 92 226 BWBB 0 332 WBBB 508 332; then
+    ocr nameplate -crop 88x20+4+206 -intensity Rec709Luma -threshold 90% -negate
+    ocr text -crop 464x102+16+230 -intensity Brightness -threshold 90% -negate
+    output
+  fi
 }
 
 # Called to postprocess the text before writing it out.
@@ -69,52 +83,39 @@ function WRITE {
 
 shopt -s lastpipe
 
-# if-detected <im args for detection> <template image> <maximum diff> \
-#   <key> <im args for key> \
-#   <key> <im args for key> \
-#   ...
-# Upvalues: IMAGE, the image being read; TRANSCRIPT, the file being written.
-function if-detected {
-  local pattern="$1"
-  local args="$2"
-  local maxdiff="$3"
-  shift 3
+declare -r BASEDIR="$(dirname "$0")"
 
-  local diff=$(diff-images "$IMAGE" "$pattern" "$args")
-  if (( diff > maxdiff )); then return; fi
-
-  local -A OCR=()
-  while [[ $1 ]]; do
-    local key="$1"
-    local args="$2"
-    shift 2
-
-    OCR[$key]="$(ocr "$key" "$IMAGE" "$args" | POST/$key)"
-  done
-  WRITE >> "$TRANSCRIPT"
-}
-
-# diff-images basis template im-args
+# diff-images basis template im-args...
 function diff-images {
-  compare <(convert $3 "$1" bmp:-) "$2" \
+  local img="$1"
+  local pattern="$2"
+  shift 2
+  compare <(convert "$img" "$@" bmp:-) "$pattern" \
     -metric AE bmp:/dev/null 2>&1
 }
 
-# ocr <database name> <image> <convert arguments>
+# ocr <key name> <convert arguments...>
+# upvalues: IMAGE, the image to read; OCR[$key], the destination for the text
 function ocr {
-  mkdir -p "$1.ocr"
-  cp "$2" test.png
-  convert $3 "$2" ocr.png
+  local key="$1"; shift
+  mkdir -p "$key.ocr"
+  # cp "$2" test.png
+  # convert $3 "$2" ocr.png
 
-  gocr -p "$1.ocr/" -m $((256+128+2)) -d 0 -a 99 -f ASCII \
-    -i <(convert $3 "$2" pnm:-) \
+  gocr -p "$key.ocr/" -m $((256+128+2)) -d 0 -a 99 -f ASCII \
+    -i <(convert "$IMAGE" "$@" pnm:-) \
     -o /tmp/$$ 2>&1 | sed -E '
       s/^Press RET.*/\x1B[2J/
       /^#/ d
       y/,O#./░▒█ /
       s/([a-z])  /\1. /g
     ' >&2
-  cat /tmp/$$
+  OCR[$key]=$(cat /tmp/$$ | POST/$key)
+  rm /tmp/$$
+}
+
+function output {
+  WRITE >> "$TRANSCRIPT"
 }
 
 # get <key>
@@ -131,6 +132,7 @@ function main {
   local IMAGE
   for IMAGE in $(printf '%s\n' "$@" | sort -g); do
     echo "$IMAGE"
+    local -A OCR=()
     READ
   done
   cat "$TRANSCRIPT"
