@@ -1,3 +1,0 @@
-for face in "$@"; do
-  cp -v `tools/findface $face.jpeg` latest/faces/
-done

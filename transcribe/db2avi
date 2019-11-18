@@ -1,8 +1,0 @@
-#!/bin/bash
-
-name=${1/.*/}
-output=$2
-
-mplayer -vo yuv4mpeg:file=$output.mpeg -ao pcm:waveheader:file=$output.wav:fast $1
-mencoder $output.mpeg -audiofile $output.wav -oac mp3lame -ovc lavc -of avi -noskip -lameopts:cbr -o $output.avi
-rm $output.mpeg $output.wav
