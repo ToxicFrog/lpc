@@ -79,6 +79,8 @@ function POST/text {
 
       # It tends to read '...' as '. . . ', so fix that
       s/\\. \\. \\. /.../g
+      # Also tends to one doublequote as two
+      s/\"\"/\"/g
 
       # Trim whitespace before closing paren.
       s/ +\)/)/g
