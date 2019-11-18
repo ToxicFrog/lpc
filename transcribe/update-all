@@ -1,0 +1,9 @@
+#!/bin/bash
+
+i=0
+while [[ -d `printf %03d $i` ]]; do
+    lua lp.lua `printf %03d $i` post bbcode || exit 1
+    lua lp.lua `printf %03d $i` post html || exit 1
+    ((++i))
+done
+

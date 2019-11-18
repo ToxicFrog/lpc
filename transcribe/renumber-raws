@@ -1,0 +1,21 @@
+#!/bin/bash
+
+cd latest
+
+i=0;
+while [[ -f raw/`printf %04d $i`.png ]]; do
+	((++i))
+done
+
+for file in raw/20*.png raw/*Time*.png raw/vlcsnap*.png; do
+	mv "$file" raw/`printf %04d $i`.png 2>/dev/null
+	((++i))
+done
+
+for file in raw/*.bmp; do
+	convert $file raw/`printf %04d $i`.png  2>/dev/null
+	rm $file 2>/dev/null
+	((++i))
+done
+
+cd ..

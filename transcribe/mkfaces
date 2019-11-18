@@ -1,0 +1,37 @@
+#!/bin/bash
+
+function imagegrep() {
+    local basis="$1"
+    local orig="$2"
+    composite -compose darken "$orig" <(convert -level 0,1 "$basis" bmp:-) bmp:- \
+        | compare bmp:- "$basis" -metric AE bmp:/dev/null 2>&1 \
+        | egrep -q '^0$' && return 0
+    return 1
+}
+
+function hasface() {
+    imagegrep "faces/basis_$1.png" "$2" && return 0 || return 1
+}
+
+echo -n "Finding and extracting faces"
+mkdir -p latest/rawfaces
+for file in latest/raw/*; do
+    if hasface l $file; then
+        convert $file \
+            -crop 158x188+36+31 \
+            -filter Box -resize '32x38!' \
+            -bordercolor '#4A6DB5' -border 1x1 \
+            ${file/raw\//rawfaces\/l_}
+        echo -n "."
+    fi
+    if hasface r $file; then
+        convert $file \
+            -crop 158x188+446+31 \
+            -filter Box -resize '32x38!' \
+            -bordercolor '#4A6DB5' -border 1x1 \
+            ${file/raw\//rawfaces\/r_}
+        echo -n "."
+    fi
+done
+echo "done."
+

@@ -1,0 +1,170 @@
+#!/bin/bash
+# :mode=bash:
+
+# missing: 171, 172, 183, 199
+
+# Configurable bits
+
+# corner <shape> <threshold> <coordinates>
+function corner {
+  detect 0 "$BASEDIR/aai/$1.png" \
+    -crop 4x4+$3+$4 -colorspace Gray -normalize -threshold $2
+}
+
+function detect-top {
+  # Top left, top right, NP top left, NP top right, NP bottom left
+  corner BBBW 90% 0 0 &&
+  corner BBWB 90% 508 0 &&
+  corner WBWW 10% 0 106 &&
+  corner WBWW 10% 92 106 &&
+  corner WWBW 10% 0 130
+}
+
+function detect-bottom {
+  corner BWWW 10% 0 250 &&
+  corner WWWB 10% 0 274 &&
+  corner WWWB 10% 92 274 &&
+  corner BWBB 90% 0 380 &&
+  corner WBBB 90% 508 380
+}
+
+function detect-bottom-offset {
+  corner BWWW 10% 0 202 &&
+  corner WWWB 10% 0 226 &&
+  corner WWWB 10% 92 226 &&
+  corner BWBB 90% 0 332 &&
+  corner WBBB 90% 508 332
+}
+
+# Called to read the text out of an image.
+function READ {
+  # Text at top.
+  # Coordinates for text TL TR, nameplate TL TR BL.
+  if detect-top; then
+    ocr nameplate -crop 88x20+4+110 -intensity Rec709Luma -threshold 90% -negate
+    ocr text -crop 464x102+16+4 -intensity Brightness -threshold 90% -negate
+    output
+    return
+  fi
+
+  if detect-bottom; then
+    ocr nameplate -crop 88x20+4+254 -intensity Rec709Luma -threshold 90% -negate
+    ocr text -crop 464x102+16+278 -intensity Brightness -threshold 90% -negate
+    output
+    return
+  fi
+
+  if detect-bottom-offset; then
+    ocr nameplate -crop 88x20+4+206 -intensity Rec709Luma -threshold 90% -negate
+    ocr text -crop 464x102+16+230 -intensity Brightness -threshold 90% -negate
+    output
+    return
+  fi
+}
+
+# Called to postprocess the text before writing it out.
+function POST/nameplate {
+  # Remove leading and trailing whitespace, and collapse '?? ' into '? ' since
+  # a pecularity of OCRing '? ? ?' in the nameplate causes it to render as
+  # '?? ?? ?? ' instead.
+  sed -E 's/\?\? /\? /g; s/^ +//; s/ +$//'
+}
+
+function POST/text {
+  tr '\n' ' ' \
+    | sed -E "
+      # Replace things like I,m and it,s with I'm and it's, since the OCR has
+      # trouble distinguishing between ' and ,
+      s/([A-Za-z]),([A-Za-z])/\\1'\\2/g
+
+      # It tends to read '...' as '. . . ', so fix that
+      s/\\. \\. \\. /.../g
+      # Also tends to one doublequote as two
+      s/\"\"/\"/g
+
+      # Trim whitespace before closing paren.
+      s/ +\)/)/g
+
+      # Remove leading and trailing whitespace
+      s/^ +//; s/ +$//
+    "
+}
+
+# Called to write the text out to the transcription file.
+function WRITE {
+  echo "# $IMAGE"
+  echo "[$(get nameplate)] $(get text)"
+  echo ""
+}
+
+#### No user serviceable parts below this line. ####
+
+shopt -s lastpipe
+
+declare -r BASEDIR="$(dirname "$0")"
+
+# detect delta pattern im-args...
+function detect {
+  local maxdelta="$1"
+  local pattern="$2"
+  shift 2
+  local diff=$(diff-images "$IMAGE" "$pattern" "$@")
+  (( diff > maxdelta )) && return 1
+  return 0
+}
+
+# diff-images basis template im-args...
+function diff-images {
+  local img="$1"
+  local pattern="$2"
+  shift 2
+  compare <(convert "$img" "$@" bmp:-) "$pattern" \
+    -metric AE bmp:/dev/null 2>&1
+}
+
+# ocr <key name> <convert arguments...>
+# upvalues: IMAGE, the image to read; OCR[$key], the destination for the text
+function ocr {
+  local key="$1"; shift
+  mkdir -p "$key.ocr"
+  # cp "$2" test.png
+  # convert $3 "$2" ocr.png
+
+  gocr -p "$key.ocr/" -m $((256+128+2)) -d 0 -a 99 -f ASCII \
+    -i <(convert "$IMAGE" "$@" pnm:-) \
+    -o /tmp/$$ 2>&1 | sed -E '
+      s/^Press RET.*/\x1B[2J/
+      /^#/ d
+      y/,O#./░▒█ /
+      s/([a-z])  /\1. /g
+    ' >&2
+  OCR[$key]=$(cat /tmp/$$ | POST/$key)
+  rm /tmp/$$
+}
+
+function output {
+  WRITE >> "$TRANSCRIPT"
+}
+
+# get <key>
+# Get the text associated with a key in the current OCR context.
+# Upvalues: OCR, the key->text map.
+function get {
+  echo -n "${OCR[$1]}"
+}
+
+function main {
+  local -r TRANSCRIPT="$1"; shift
+  echo > "$TRANSCRIPT"
+
+  local IMAGE
+  for IMAGE in $(printf '%s\n' "$@" | sort -g); do
+    echo "$IMAGE"
+    local -A OCR=()
+    READ
+  done
+  cat "$TRANSCRIPT"
+}
+
+main "$@"
+
