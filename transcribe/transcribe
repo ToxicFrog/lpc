@@ -59,7 +59,23 @@ function get {
   echo -n "${OCR[$1]}"
 }
 
+function safety-checks {
+  local missing=0
+  for cmd in convert compare sed tr gocr; do
+    if ! type "$cmd" &>/dev/null; then
+      ((++missing))
+      echo "Couldn't find '$cmd'" >&2
+    fi
+  done
+  if ((missing)); then
+    echo "One or more necessary programs are missing or not correctly installed." >&2
+    echo "transcribe requires sed, tr, ImageMagick's convert and compare programs, and gocr." >&2
+    exit 1
+  fi
+}
+
 function main {
+  safety-checks
   echo "Reading configuration file: $1"
   source "$1"
   echo "Font database stored in: ${FONTDIR?Configuration file did not set FONTDIR!}"
