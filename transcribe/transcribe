@@ -1,0 +1,97 @@
+#!/bin/bash
+
+shopt -s lastpipe
+
+# detect maxdelta pattern im-args...
+# processes IMAGE with im-args, then checks that the AE delta vs pattern is
+# no more than maxdelta.
+function detect {
+  local maxdelta="$1"
+  local pattern="$2"
+  shift 2
+  local diff=$(diff-images "$IMAGE" "$pattern" "$@")
+  (( diff > maxdelta )) && return 1
+  return 0
+}
+
+# diff-images basis pattern im-args...
+# implementation detail for detact. processes basis with im-args, compares to
+# pattern and outputs AE delta.
+function diff-images {
+  local img="$1"
+  local pattern="$2"
+  shift 2
+  compare <(convert "$img" "$@" bmp:-) "$pattern" \
+    -metric AE bmp:/dev/null 2>&1
+}
+
+# ocr <key name> <convert arguments...>
+# upvalues: IMAGE, the image to read; OCR[$key], the destination for the text
+# processes IMAGE with the given arguments, feeds the result to gocr and stores
+# whatever it returns in OCR[$key].
+# gocr output is written to stderr and postprocessed to make it prettier.
+function ocr {
+  local key="$1"; shift
+  mkdir -p "$FONTDIR/$key.ocr"
+  # cp "$2" test.png
+  # convert $3 "$2" ocr.png
+
+  gocr -p "$FONTDIR/$key.ocr/" -m $((256+128+2)) -d 0 -a 99 -f ASCII \
+    -i <(convert "$IMAGE" "$@" pnm:-) \
+    -o /tmp/$$ 2>&1 | sed -E '
+      s/^Press RET.*/\x1B[2J/
+      /^#/ d
+      y/,O#./░▒█ /
+      s/([a-z])  /\1. /g
+    ' >&2
+  OCR[$key]=$(cat /tmp/$$ | POST/$key)
+  rm /tmp/$$
+}
+
+function output {
+  WRITE >> "$TRANSCRIPT"
+}
+
+# get <key>
+# Get the text associated with a key in the current OCR context.
+# Upvalues: OCR, the key->text map.
+function get {
+  echo -n "${OCR[$1]}"
+}
+
+function main {
+  echo "Reading configuration file: $1"
+  source "$1"
+  echo "Font database stored in: ${FONTDIR?Configuration file did not set FONTDIR!}"
+  echo "Output file set to: $2"
+  local -r TRANSCRIPT="$2"
+  echo > "$TRANSCRIPT"
+  shift 2
+
+  local IMAGE
+  for IMAGE in "$@"; do
+    echo "$IMAGE"
+    local -A OCR=()
+    READ
+  done
+  cat "$TRANSCRIPT"
+}
+
+if [[ ! $3 ]]; then
+  echo "
+
+Usage: transcribe <configuration file> <output file> <list of images...>
+
+Processes the images in the given order, searching for and extracting text based
+on the given configuration. Writes the output to the output file and, once
+finished, displays it.
+
+If unrecognized characters are detected while extracting text, prompts the user
+for them and stores them in a configuration-specific database to speed up later
+processing."
+  exit 1
+fi
+
+declare -r BASEDIR="$(dirname "$0")"
+
+main "$@"
